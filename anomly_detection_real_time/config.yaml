@@ -1,0 +1,80 @@
+data_paths:
+  train_flat:
+    - '/home/mpaul/projects/mpaul/mai/data/dns/raw_data/train_cubro_pcap_00002375_July24-25.csv'
+  test_flat:
+    - '/home/mpaul/projects/mpaul/mai/data/dns/raw_data/test_cubro_solana_DNS_Reflection_Amplification-4GB_2024.csv'
+    # - '/home/tw/projects/mai/data/dns/raw_data/test_cubro_solana_DNS_Amplification-2024.csv'
+
+settings:
+  attack_interval: 900
+  type: 'bucket'
+  bucket_size: 30
+  result_path: '/home/mpaul/projects/mpaul/mai/results'
+
+features:
+  bucket_target_features:
+    # - 'sum_pl_fwd_count'
+    # - 'sum_pl_bwd_count'
+    # - 'sum_pl_fwd_bytes'
+    # - 'sum_pl_bwd_bytes'
+    # - 'sum_pl_fwd_flow_count'
+    # - 'sum_pl_bwd_flow_count'
+    # - 'pl_flow_fwd_bwd_byte_ratio_sum'
+    # - 'pl_flow_fwd_bwd_byte_ratio_avg'
+    # - 'pl_flow_bwd_fwd_byte_ratio'
+    # - 'pl_flow_count_ratio'
+    # - 'avg_pl_fwd_count'
+    # - 'avg_pl_bwd_count'
+    # - 'avg_pl_fwd_bytes'
+    # - 'avg_pl_bwd_bytes'
+    # - 'sum_pkt_fwd_count'
+    # - 'sum_pkt_bwd_count'
+    # - 'sum_pkt_fwd_bytes'
+    # - 'sum_pkt_bwd_bytes'
+    # - 'sum_pkt_fwd_flow_count'
+    # - 'sum_pkt_bwd_flow_count'
+    # - 'pkt_flow_fwd_bwd_byte_ratio_sum'
+    # - 'pkt_flow_fwd_bwd_byte_ratio_avg'
+    # - 'pkt_flow_bwd_fwd_byte_ratio'
+    - 'pkt_flow_count_ratio'
+    # - 'avg_pkt_fwd_count'
+    # - 'avg_pkt_bwd_count'
+    # - 'avg_pkt_fwd_bytes'
+    # - 'avg_pkt_bwd_bytes'
+
+  flat_target_features:
+    - 'pl_fwd_count'
+    - 'pl_len_fwd_total'
+    - 'pl_bwd_count'
+    - 'pl_len_bwd_total'
+    - 'pl_per_sec'
+    - 'pl_bytes_per_sec'
+    - 'pl_count_ratio'
+    - 'pl_bytes_ratio'
+    - 'pkt_fwd_count'
+    - 'pkt_len_fwd_total'
+    - 'pkt_bwd_count'
+    - 'pkt_len_bwd_total'
+    - 'pkt_per_sec'
+    - 'pkt_bytes_per_sec'
+    - 'pkt_count_ratio'
+    - 'pkt_bytes_ratio'
+
+  target_labels:
+    - 'dns'
+    - 'dns_attack'
+
+pipeline:
+  steps:
+    # - name: scaler
+      # class: StandardScaler
+    - name: iso_forest
+      class: IsolationForest
+      params:
+        random_state: 42
+        # contamination: 0.1
+
+param_grid:
+  iso_forest__n_estimators: [125]
+  iso_forest__contamination: [0.3]
+

@@ -1,0 +1,39 @@
+{
+    "features": [
+        "sum_pl_fwd_flow_count",
+        "sum_pl_bwd_flow_count",
+        "pl_flow_count_ratio",
+        "avg_pl_fwd_count",
+        "avg_pl_bwd_count",
+        "avg_pl_fwd_bytes",
+        "avg_pl_bwd_bytes"
+    ],
+    "model": {
+        "pipeline": {
+            "scaler": {
+                "class": "sklearn.preprocessing.StandardScaler",
+                "default_params": {}
+            },
+            "iso_forest": {
+                "class": "sklearn.ensemble.IsolationForest",
+                "default_params": {
+                    "random_state": 42
+                },
+                "param_grid": {
+                    "n_estimators": [100, 150, 200],
+                    "contamination": [0.01, 0.05, 0.1],
+                    "max_features": [0.5, 0.7, 1.0],
+                    "max_samples": [256, 512, "auto"]
+                }
+            }
+        },
+        "cross_validation": {
+            "n_splits": 5
+        },
+        "grid_search": {
+            "scoring": "f1",
+            "n_jobs": -1,
+            "verbose": 2
+        }
+    }
+}

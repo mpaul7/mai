@@ -1,0 +1,30 @@
+{
+    "version": "1",
+    "stages": [
+        {
+        "name": "scaler",
+        "type": "sklearn.preprocessing.MinMaxScaler",
+        "kwargs": {  }
+    },
+
+    {
+        "name": "classifier",
+        "type": "sklearn.ensemble.IsolationForest",
+        "kwargs": {
+            "random_state": 42
+        }
+    }
+    ],
+    "parameters" : {       
+                    "classifier__n_estimators" : [25, 30, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100]
+    },
+    "type": "ml",
+    "cross_validations": 5,
+    "label_col": "label",
+    "target_labels" : ["dns", "dns_attack"],
+    "target_features": ["Average_fw_packet_size", "Average_bw_packet_size",
+	"Average_fw_total_pl_bytes", "Average_bw_total_pl_bytes",
+	"Ratio_of_total_bw_flows_and_fw_flows"
+	] 
+    
+}

@@ -1,0 +1,19 @@
+{
+'splt_ps': <KerasTensor: shape=(None, 30) dtype=float32 (created by layer 'splt_ps')>, 
+'splt_piat': <KerasTensor: shape=(None, 30) dtype=float32 (created by layer 'splt_piat')>, 
+'splt_direction': <KerasTensor: shape=(None, 30) dtype=float32 (created by layer 'splt_direction')>}, 
+
+<KerasTensor: shape=(None, 32) dtype=float32 (created by layer 'dense_1')>}
+ <KerasTensor: shape=(None, 32) dtype=float32 (created by layer 'dense_1')>}
+
+KerasTensor(
+type_spec=TensorSpec(shape=(None, 32), 
+dtype=tf.float32, name=None), 
+name='dense_1/BiasAdd:0', 
+description="created by layer 'dense_1'")
+
+'dst2src_stddev_ps': <KerasTensor: shape=(None, 1) dtype=float32 (created by layer 'dst2src_stddev_ps')>, 
+'src2dst_fin_packets': <KerasTensor: shape=(None, 1) dtype=float32 (created by layer 'src2dst_fin_packets')>
+'dst2src_syn_packets': <KerasTensor: shape=(None, 1) dtype=float32 (created by layer 'dst2src_syn_packets')>, 
+'src2dst_psh_packets': <KerasTensor: shape=(None, 1) dtype=float32 (created by layer 'src2dst_psh_packets')>, 
+'dst2src_fin_packets': <KerasTensor: shape=(None, 1) dtype=float32 (created by layer 'dst2src_fin_packets')>, 
