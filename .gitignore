@@ -34,3 +34,5 @@ ENV/
 /data/
 *.csv
 *.log 
+
+mai/anomly_detection_real_time/results/

@@ -1,9 +1,9 @@
 # Network Configuration
-INTERFACE = "enp0s31f6"
+INTERFACE = "eno1"
 CAPTURE_INTERVAL = 15
 
 # Model Configuration
-MODEL_PATH = '/home/mpaul/projects/mpaul/mai/results/dns_attack_model.joblib'
+MODEL_PATH = '/home/solana/projects/mai/results/dns_attack_model.joblib'
 
 # Elasticsearch Configuration
 ES_HOST = 'http://localhost:9200'

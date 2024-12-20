@@ -9,7 +9,7 @@ settings:
   attack_interval: 900
   type: 'bucket'
   bucket_size: 30
-  result_path: '/home/mpaul/projects/mpaul/mai/results'
+  result_path: '/home/solana/projects/mai/results'
 
 features:
   bucket_target_features:

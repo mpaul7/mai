@@ -1,5 +1,6 @@
 from nfstream import NFStreamer
 import pandas as pd
+import numpy as np
 import time
 from threading import Thread
 import queue
@@ -89,15 +90,39 @@ class NetworkMonitor:
         
     def _extract_flow_data(self, flow):
         """Extract relevant data from network flow"""
-        return {
-            'sip': flow.src_ip,
+        simulated_fwd_bwd_count = {
+                            1: [0, 1, 2],  2: [0, 1, 2, 3],  3: [0, 1, 2, 3], 
+                            10: [10],  0: [0, 2, 3, 4, 5, 6, 7, 8, 10],  4: [2, 3, 4],  8: [8], 
+                            5: [4, 5],  6: [6],  7: [0, 7], 11: [11],  
+                            9: [9], 12: [12], 64: [64], 62: [62], 13: [13]
+                            }      
+        pkt_fwd_count_list = [ 1,  2,  3, 10,  0,  4,  8,  5,  6,  7, 11,  9, 12, 64, 62, 13]
+        pkt_fwd_count = pkt_fwd_count_list[int(len(pkt_fwd_count_list) * np.random.random())]
+        pkt_bwd_key_values = simulated_fwd_bwd_count[pkt_fwd_count]
+        pkt_bwd_count = pkt_bwd_key_values[int(len(pkt_bwd_key_values) * np.random.random())]
+
+
+        return { 
+            # ================================================
+
+            # 'sip': flow.src_ip,
+            # 'sport': flow.src_port,
+            # 'dip': flow.dst_ip,
+            # 'dport': flow.dst_port,
+            # 'proto': flow.protocol,
+            # 'first_timestamp': flow.bidirectional_first_seen_ms,
+            # 'pkt_fwd_count': flow.bidirectional_packets,
+            # 'pkt_bwd_count': flow.bidirectional_packets
+
+            # =============================
+             'sip': flow.src_ip,
             'sport': flow.src_port,
             'dip': flow.dst_ip,
             'dport': flow.dst_port,
             'proto': flow.protocol,
             'first_timestamp': flow.bidirectional_first_seen_ms,
-            'pkt_fwd_count': flow.bidirectional_packets,
-            'pkt_bwd_count': flow.bidirectional_packets
+            'pkt_fwd_count': pkt_fwd_count,
+            'pkt_bwd_count': pkt_bwd_count
         }
         
     def process_data(self):

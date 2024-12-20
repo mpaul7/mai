@@ -88,6 +88,8 @@ def main():
         
     # Train the model and get the trained pipeline
     pipe = model_handle.train_model()
+
+    
     
     # Test the model and get the predicted DataFrame and classification report
     predicted_df, classification_report = model_handle.test_model(pipe)

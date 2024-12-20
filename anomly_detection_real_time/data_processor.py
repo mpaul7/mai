@@ -81,7 +81,7 @@ class DataProcessor:
                 # bucket_flows = test_flat_bucket[test_flat_bucket['bucket'] == bucket].assign(label='dns_attack')
                 # print(test_flat_bucket.head())
                 # attack_flows.append(bucket_flows)
-        print(test_flat_bucket.shape)
+        print(test_flat_bucket.groupby('label').size())
         return test_flat_bucket
         
     def _store_to_elasticsearch(self, data):
