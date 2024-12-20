@@ -11,19 +11,10 @@ from config import INTERFACE, CAPTURE_INTERVAL
 
 class NetworkMonitor:
     def __init__(self, interface_name, capture_interval=60):
-        self.interface_name = self._validate_interface(interface_name)
+        self.interface_name = interface_name
         self.capture_interval = capture_interval
         self.data_queue = queue.Queue()
         self.data_processor = DataProcessor()
-        
-    def _validate_interface(self, interface_name):
-        """Validate if the network interface exists"""
-        available_interfaces = netifaces.interfaces()
-        if interface_name not in available_interfaces:
-            print(f"Warning: Interface {interface_name} not found!")
-            print(f"Available interfaces: {available_interfaces}")
-            raise ValueError(f"Invalid interface: {interface_name}")
-        return interface_name
         
     def continuous_capture(self):
         """Continuously capture network traffic on specified interface"""
@@ -75,7 +66,29 @@ class NetworkMonitor:
             for flow in streamer:
                 if time.time() - start_time >= self.capture_interval:
                     break
-                flows.append(self._extract_flow_data(flow))
+                """Extract relevant data from network flow"""
+                simulated_fwd_bwd_count = {
+                                    1: [0, 1, 2],  2: [0, 1, 2, 3],  3: [0, 1, 2, 3], 
+                                    10: [10],  0: [0, 2, 3, 4, 5, 6, 7, 8, 10],  4: [2, 3, 4],  8: [8], 
+                                    5: [4, 5],  6: [6],  7: [0, 7], 11: [11],  
+                                    9: [9], 12: [12], 64: [64], 62: [62], 13: [13]
+                                    }      
+                pkt_fwd_count_list = [ 1,  2,  3, 10,  0,  4,  8,  5,  6,  7, 11,  9, 12, 64, 62, 13]
+                pkt_fwd_count = pkt_fwd_count_list[int(len(pkt_fwd_count_list) * np.random.random())]
+                pkt_bwd_key_values = simulated_fwd_bwd_count[pkt_fwd_count]
+                pkt_bwd_count = pkt_bwd_key_values[int(len(pkt_bwd_key_values) * np.random.random())]
+
+                _flow_data = {
+                    'sip': flow.src_ip,
+                    'sport': flow.src_port,
+                    'dip': flow.dst_ip,
+                    'dport': flow.dst_port,
+                    'proto': flow.protocol,
+                    'first_timestamp': flow.bidirectional_first_seen_ms,
+                    'pkt_fwd_count': pkt_fwd_count,
+                    'pkt_bwd_count': pkt_bwd_count
+                }
+                flows.append(_flow_data)
                     
         except PermissionError:
             print("Permission denied. Please run with sudo privileges.")
@@ -88,42 +101,6 @@ class NetworkMonitor:
             
         return flows
         
-    def _extract_flow_data(self, flow):
-        """Extract relevant data from network flow"""
-        simulated_fwd_bwd_count = {
-                            1: [0, 1, 2],  2: [0, 1, 2, 3],  3: [0, 1, 2, 3], 
-                            10: [10],  0: [0, 2, 3, 4, 5, 6, 7, 8, 10],  4: [2, 3, 4],  8: [8], 
-                            5: [4, 5],  6: [6],  7: [0, 7], 11: [11],  
-                            9: [9], 12: [12], 64: [64], 62: [62], 13: [13]
-                            }      
-        pkt_fwd_count_list = [ 1,  2,  3, 10,  0,  4,  8,  5,  6,  7, 11,  9, 12, 64, 62, 13]
-        pkt_fwd_count = pkt_fwd_count_list[int(len(pkt_fwd_count_list) * np.random.random())]
-        pkt_bwd_key_values = simulated_fwd_bwd_count[pkt_fwd_count]
-        pkt_bwd_count = pkt_bwd_key_values[int(len(pkt_bwd_key_values) * np.random.random())]
-
-
-        return { 
-            # ================================================
-
-            # 'sip': flow.src_ip,
-            # 'sport': flow.src_port,
-            # 'dip': flow.dst_ip,
-            # 'dport': flow.dst_port,
-            # 'proto': flow.protocol,
-            # 'first_timestamp': flow.bidirectional_first_seen_ms,
-            # 'pkt_fwd_count': flow.bidirectional_packets,
-            # 'pkt_bwd_count': flow.bidirectional_packets
-
-            # =============================
-             'sip': flow.src_ip,
-            'sport': flow.src_port,
-            'dip': flow.dst_ip,
-            'dport': flow.dst_port,
-            'proto': flow.protocol,
-            'first_timestamp': flow.bidirectional_first_seen_ms,
-            'pkt_fwd_count': pkt_fwd_count,
-            'pkt_bwd_count': pkt_bwd_count
-        }
         
     def process_data(self):
         """Process the captured data from the queue"""
@@ -141,13 +118,6 @@ class NetworkMonitor:
                 
     def start_monitoring(self):
         """Start the monitoring threads"""
-        # Check if interface is up
-        try:
-            addr = netifaces.ifaddresses(self.interface_name)
-            if netifaces.AF_INET not in addr:
-                print(f"Warning: Interface {self.interface_name} might not be up or doesn't have an IPv4 address")
-        except Exception as e:
-            print(f"Error checking interface status: {e}")
 
         capture_thread = Thread(target=self.continuous_capture, daemon=True)
         process_thread = Thread(target=self.process_data, daemon=True)
