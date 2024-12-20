@@ -100,8 +100,7 @@ class NetworkMonitor:
             raise
             
         return flows
-        
-        
+            
     def process_data(self):
         """Process the captured data from the queue"""
         while True:
