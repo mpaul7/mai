@@ -2,6 +2,8 @@
 
 This document provides instructions for starting and checking the status of Elasticsearch and Kibana on Ubuntu Linux.
 
+## Resources
+- https://pastebin.pl/view/b3102120
 ## Prerequisites
 
 - Ensure you have Java installed (for Elasticsearch).

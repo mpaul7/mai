@@ -16,11 +16,11 @@ class DataPreparation:
         df['pl_flow_fwd_count'] = np.where(df['pl_fwd_count'] > 0, 1, 0)
         df['pl_flow_bwd_count'] = np.where(df['pl_bwd_count'] > 0, 1, 0)
 
-        df['pkt_per_sec'] = (df['pkt_fwd_count'] + df['pkt_bwd_count']) / ((df['last_timestamp'] - df['first_timestamp']) / 1_000_000) # pps -ok
-        df['pkt_bytes_per_sec'] = (df['pkt_len_fwd_total'] + df['pkt_len_bwd_total']) / ((df['last_timestamp'] - df['first_timestamp']) / 1_000_000) # bps
+        # df['pkt_per_sec'] = (df['pkt_fwd_count'] + df['pkt_bwd_count']) / ((df['last_timestamp'] - df['first_timestamp']) / 1_000_000) # pps -ok
+        # df['pkt_bytes_per_sec'] = (df['pkt_len_fwd_total'] + df['pkt_len_bwd_total']) / ((df['last_timestamp'] - df['first_timestamp']) / 1_000_000) # bps
 
-        df['pl_per_sec'] = (df['pl_fwd_count'] + df['pl_bwd_count']) / df['total_time']
-        df['pl_bytes_per_sec'] = (df['pl_len_fwd_total'] + df['pl_len_bwd_total']) / df['total_time']
+        # df['pl_per_sec'] = (df['pl_fwd_count'] + df['pl_bwd_count']) / df['total_time']
+        # df['pl_bytes_per_sec'] = (df['pl_len_fwd_total'] + df['pl_len_bwd_total']) / df['total_time']
 
         # df['pkt_count_ratio'] = np.where(df['pkt_fwd_count'] != 0, df['pkt_bwd_count'] / df['pkt_fwd_count'], np.nan)
         df['pkt_count_ratio'] = df['pkt_bwd_count'] / (df['pkt_fwd_count'] + 1)
@@ -46,7 +46,9 @@ class DataPreparation:
             right=True
         )
         output_col = ['sip', 'sport', 'dip', 'dport', 'bucket', 'first_timestamp', 'time_difference_seconds',
-                    'pkt_bwd_count','pkt_fwd_count', 'pkt_per_sec', 'total_time', 'pkt_len_fwd_total', 'pkt_len_bwd_total',
+                    'pkt_bwd_count','pkt_fwd_count', 
+                    # 'pkt_per_sec', 
+                    'total_time', 'pkt_len_fwd_total', 'pkt_len_bwd_total',
                     'pl_fwd_count','pl_bwd_count', 'pl_len_fwd_total', 'pl_len_bwd_total',
                     'label', 'pkt_count_ratio', 'pkt_bytes_ratio', 'pl_count_ratio', 'pl_bytes_ratio',
                     'pkt_flow_fwd_count', 'pkt_flow_bwd_count'
@@ -72,7 +74,7 @@ class DataPreparation:
             sum_pl_fwd_flow_count=('pl_flow_fwd_count', 'sum'), # 5. Payload flow count fwd in a bucket
             sum_pl_bwd_flow_count=('pl_flow_bwd_count', 'sum'), # 6. Payload flow count bwd in a bucket
             
-            sum_pkt_per_sec=('pkt_per_sec', 'sum'), # 11. Packet per second in a bucket
+            # sum_pkt_per_sec=('pkt_per_sec', 'sum'), # 11. Packet per second in a bucket
             # Set 2 - average of Set 1
             avg_pl_fwd_count=('pl_fwd_count', 'mean'), # 1a. Summation of all flows pl_fwd_count in a bucket
             avg_pl_bwd_count=('pl_bwd_count', 'mean'), # 2a. Summation of all flows pl_bwd_count in a bucket

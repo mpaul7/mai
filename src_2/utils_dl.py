@@ -9,12 +9,12 @@ from tensorflow.keras import layers
 from tensorflow.keras import models
 
 import tensorflow as tf
-
+0
 
 """Create Keras DL model - CNN"""
 def create_dl_model_cnn(params, output_units):
     """Create input layers for packet sequence data """
-    inputs = {name: layers.Input(shape=(params['sequence_length'],), dtype=tf.float32, name=name) for name in params['seq_packet_feature_cnn']}
+    inputs = {name: layers.Input(shape=(57,), dtype=tf.float32, name=name) for name in params['seq_packet_feature_cnn']}
 
     """Stack input layers"""
     pktseq_x = tf.stack(list(inputs.values()), axis=2)

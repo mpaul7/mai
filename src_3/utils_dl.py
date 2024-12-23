@@ -19,46 +19,54 @@ def create_dl_model_cnn_v2(params):
 
     
     """Create input layers for packet sequence data """
+    print("using cnn_v2")
     # inputs = {name: layers.Input(shape=(params['sequence_length'],), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
-    inputs = {name: layers.Input(shape=(3), dtype=tf.float32, name=name) for name in params['features']}
-    print(inputs)
+    # inputs = {name: layers.Input(shape=(3, 1), dtype=tf.float32, name=name) for name in params['cnn_statistical']}
+    # print(inputs)
     # layers.Input(shape=input_shape)
     # print(inputs)
+    """Stack input layers"""
+    # pktseq_x = tf.stack(list(inputs.values()), axis=2)
+    
+    
+    inputs = {name: layers.Input(shape=(3,), dtype=tf.float32, name=name)for name in params['cnn_statistical']}
+    # print(inputs)
+    
     """Stack input layers"""
     pktseq_x = tf.stack(list(inputs.values()), axis=2)
     # pktseq_x = layers.Concatenate(axis=-1)(list(inputs.values()))
     # pktseq_x = layers.Reshape(target_shape=(params['sequence_length'], 1))(list(inputs.values())[-1])
     # pktseq_x = layers.Reshape((3, 1))(list(inputs.values())[-1])  # Reshape to (3, 1)
     # x = layers.Reshape((3, 1))(inputs)  # Reshape to (57, 1)
-    pktseq_x = layers.Conv1D(200, kernel_size=7, strides=1, padding='same', input_shape=(3,1))(pktseq_x)
+    pktseq_x = layers.Conv1D(100, kernel_size=7, strides=1, padding='same', input_shape=(3,1))(pktseq_x)
     # pktseq_x = layers.Conv1D(200, kernel_size=7, strides=1, padding='same', input_shape=(None, 1))(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=5, strides=1, padding='same')(pktseq_x)
+    pktseq_x = layers.Conv1D(100, kernel_size=5, strides=1, padding='same')(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=5, strides=1, padding='same')(pktseq_x)
+    pktseq_x = layers.Conv1D(100, kernel_size=5, strides=1, padding='same')(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=2, strides=1, padding='same')(pktseq_x)
+    pktseq_x = layers.Conv1D(50, kernel_size=2, strides=1, padding='same')(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=2, strides=1, padding='valid')(pktseq_x)
+    pktseq_x = layers.Conv1D(50, kernel_size=1, strides=1, padding='valid')(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=2, strides=1, padding='valid')(pktseq_x)
-    pktseq_x = layers.ReLU()(pktseq_x)
-    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+    # pktseq_x = layers.Conv1D(100, kernel_size=2, strides=1, padding='valid')(pktseq_x)
+    # pktseq_x = layers.ReLU()(pktseq_x)
+    # pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=1, strides=2, padding='valid')(pktseq_x)
-    pktseq_x = layers.ReLU()(pktseq_x)
+    # pktseq_x = layers.Conv1D(100, kernel_size=1, strides=2, padding='valid')(pktseq_x)
+    # pktseq_x = layers.ReLU()(pktseq_x)
 
-    pktseq_x = layers.GlobalAveragePooling1D()(pktseq_x)
+    # pktseq_x = layers.GlobalAveragePooling1D()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
     pktseq_x = layers.Dropout(0.5)(pktseq_x)
 
@@ -73,18 +81,14 @@ def create_dl_model_cnn(params):
 
     
     """Create input layers for packet sequence data """
-    # inputs = {name: layers.Input(shape=(params['sequence_length'],), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
-    inputs = {name: layers.Input(shape=(1), dtype=tf.float32, name=name) for name in params['features']}
-    # layers.Input(shape=input_shape)
-    # print(inputs)
+    """Create input layers for packet sequence data """
+    inputs = {name: layers.Input(shape=(params['sequence_length'],), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
+
     """Stack input layers"""
-    # pktseq_x = tf.stack(list(inputs.values()), axis=2)
-    pktseq_x = layers.Concatenate(axis=-1)(list(inputs.values()))
+    pktseq_x = tf.stack(list(inputs.values()), axis=2)
     # pktseq_x = layers.Reshape(target_shape=(params['sequence_length'], 1))(list(inputs.values())[-1])
-    pktseq_x = layers.Reshape((3, 1))(list(inputs.values())[-1])  # Reshape to (3, 1)
-    # x = layers.Reshape((3, 1))(inputs)  # Reshape to (57, 1)
-    pktseq_x = layers.Conv1D(200, kernel_size=7, strides=1, padding='same', input_shape=(3,1))(pktseq_x)
-    # pktseq_x = layers.Conv1D(200, kernel_size=7, strides=1, padding='same', input_shape=(None, 1))(pktseq_x)
+
+    pktseq_x = layers.Conv1D(200, kernel_size=7, strides=1, padding='same', input_shape=(None, 3))(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
@@ -96,20 +100,20 @@ def create_dl_model_cnn(params):
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=2, strides=1, padding='same')(pktseq_x)
+    pktseq_x = layers.Conv1D(200, kernel_size=4, strides=1, padding='same')(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=2, strides=1, padding='valid')(pktseq_x)
+    pktseq_x = layers.Conv1D(200, kernel_size=3, strides=1, padding='valid')(pktseq_x)
     pktseq_x = layers.ReLU()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=2, strides=1, padding='valid')(pktseq_x)
-    pktseq_x = layers.ReLU()(pktseq_x)
-    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+    # pktseq_x = layers.Conv1D(200, kernel_size=3, strides=1, padding='valid')(pktseq_x)
+    # pktseq_x = layers.ReLU()(pktseq_x)
+    # pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
 
-    pktseq_x = layers.Conv1D(200, kernel_size=1, strides=2, padding='valid')(pktseq_x)
-    pktseq_x = layers.ReLU()(pktseq_x)
+    # pktseq_x = layers.Conv1D(200, kernel_size=2, strides=2, padding='valid')(pktseq_x)
+    # pktseq_x = layers.ReLU()(pktseq_x)
 
     pktseq_x = layers.GlobalAveragePooling1D()(pktseq_x)
     pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
@@ -126,7 +130,6 @@ def create_dl_model_lstm(params):
     
     """Create input layers for packet sequence data """
     inputs = {name: layers.Input(shape=(params['sequence_length'],), dtype=tf.float32, name=name)for name in params['seq_packet_feature']}
-    # print(inputs)
     
     """Stack input layers"""
     pktseq_x1 = tf.stack(list(inputs.values()), axis=2)
@@ -186,32 +189,67 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
     if 'lstm' in model_type:
         features.extend(params['seq_packet_feature'])
     if 'cnn' in model_type:
-        features.extend(params['features'])
-        # df['splt_direction_cnn'] = df['splt_direction']
-        # df['splt_ps_cnn'] = df['splt_ps'] 
-        # df['splt_piat_cnn'] = df['splt_piat']
-    # Add target column to features
+        features.extend(params['seq_packet_feature'])
     features.extend([params['target_column']])
-
+ 
     X = df.loc[:, features]
+    # print(X.head())
     _y = df.loc[:, [params['target_column']]]
     y = pd.get_dummies(_y)
     
     """ Create tf dataset """  
+    
     def create_dataset(X, y, features):
         feat_dict = {}
+        X_pktseq = {}
         if 'mlp' in model_type:
             X_flow = {name: np.stack(value) for name, value in X.loc[:, params['features']].items()}
             feat_dict['flow_features'] = X_flow
         if 'lstm' in model_type:
             X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['seq_packet_feature']].items()}
             feat_dict['pktseq_features'] = X_pktseq
-        if 'cnn' in model_type:
-            X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['features']].items()}
-            feat_dict['pktseq_features'] = X_pktseq
 
+        if 'cnn' in model_type:
+            X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['seq_packet_feature']].items()}
+            feat_dict['pktseq_features'] = X_pktseq
         
+        # if 'cnn' in model_type:
+        #     # when the structure only contains cnn as input branch, i.e. the feature array only contains one feature
+        #     # use the raw byte feature straight forward without forming a dictionary
+        #     ds_X = tf.data.Dataset.from_tensor_slices(X_pktseq, name='X')
+        # else:
+        #     ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
+
+    
         ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
+        # ds_X = tf.data.Dataset.from_tensor_slices(X_pktseq, name='X')
+        ds_y = tf.data.Dataset.from_tensor_slices(y)
+        tf_dataset = tf.data.Dataset.zip((ds_X, ds_y))
+        return tf_dataset
+    
+    def create_dataset_original(X, y, features):
+        feat_dict = {}
+        if 'mlp' in model_type:
+            X_flow = {name: np.stack(value) for name, value in X.loc[:, params['features']].items()}
+            feat_dict['flow_features'] = X_flow
+        if 'lstm' in model_type:
+            if len(params['seq_packet_feature']) > 1:
+                X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['seq_packet_feature']].items()}
+                feat_dict['pktseq_features'] = X_pktseq
+
+        if 'cnn' in model_type:
+            X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['seq_packet_feature']].items()}
+            feat_dict['pktseq_features'] = X_pktseq
+        
+        if 'cnn' in model_type:
+            # when the structure only contains cnn as input branch, i.e. the feature array only contains one feature
+            # use the raw byte feature straight forward without forming a dictionary
+            ds_X = tf.data.Dataset.from_tensor_slices(X_pktseq, name='X')
+        else:
+            ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
+
+        print(feat_dict, 6666)
+        # ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
         ds_y = tf.data.Dataset.from_tensor_slices(y)
         tf_dataset = tf.data.Dataset.zip((ds_X, ds_y))
         return tf_dataset

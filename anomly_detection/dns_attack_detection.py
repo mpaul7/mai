@@ -6,6 +6,7 @@ from data_preparation import DataPreparation
 from dns_attack_report import DNSAttackReport
 import yaml
 from datetime import datetime
+from joblib import dump
 
 # Set up logging
 logging.basicConfig(
@@ -41,7 +42,7 @@ data = {
     'test_flat_bucket': []
 }
 
-def prepare_data():
+def prepare_data() -> dict:
     data_preparation = DataPreparation(df=None)
     for key, value in data.items():
         if key in ['train_flat', 'test_flat']:
@@ -88,6 +89,9 @@ def main():
         
     # Train the model and get the trained pipeline
     pipe = model_handle.train_model()
+    
+    # Save the trained pipeline
+    dump(pipe, '/home/mpaul/projects/mpaul/mai/results/dns_attack_model.joblib')
     
     # Test the model and get the predicted DataFrame and classification report
     predicted_df, classification_report = model_handle.test_model(pipe)

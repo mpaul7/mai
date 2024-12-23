@@ -74,7 +74,6 @@ class ModelBuilder:
                 elif model_type == 'mlp':
                     inputs, layers = utils_dl.create_dl_model_mlp(self.params)
                 elif model_type == 'cnn':
-                    print("Using CNN")
                     inputs, layers = utils_dl.create_dl_model_cnn(self.params)
                 input_branches['inputs'].append(inputs)
                 input_branches['layer'].append(layers)
@@ -96,6 +95,7 @@ class ModelBuilder:
         if len(input_branches['layer']) > 1:
             x = tf.keras.layers.concatenate(input_branches['layer'])
         else:
+            print(input_branches['layer'], 999)
             x = input_branches['layer'][0]
         
         # Add encoder dense layers
