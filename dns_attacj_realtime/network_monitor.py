@@ -1,20 +1,19 @@
-from nfstream import NFStreamer
-import pandas as pd
-import numpy as np
-import time
-from threading import Thread
-import queue
-import netifaces
 import os
-from data_processor import DataProcessor
-from config import INTERFACE, CAPTURE_INTERVAL
+import time
+import numpy as np
+import pandas as pd
+from threading import Thread
+from nfstream import NFStreamer
 
 class NetworkMonitor:
-    def __init__(self, interface_name, capture_interval=60):
+    """
+    NetworkMonitor class to capture network traffic and process it
+    """
+
+    def __init__(self, interface_name, data_queue, capture_interval=60):
         self.interface_name = interface_name
         self.capture_interval = capture_interval
-        self.data_queue = queue.Queue()
-        self.data_processor = DataProcessor()
+        self.data_queue = data_queue    
         
     def continuous_capture(self):
         """Continuously capture network traffic on specified interface"""
@@ -28,7 +27,7 @@ class NetworkMonitor:
                     print("Warning: This script may need to be run with sudo privileges")
                 
                 flows = self._capture_flows(start_time)
-                
+
                 if flows:
                     flows_df = pd.DataFrame(flows)
                     self.data_queue.put(flows_df)
@@ -47,7 +46,7 @@ class NetworkMonitor:
         
         try:
             # Create streamer instance
-            print(f"Attempting to create NFStreamer for interface: {self.interface_name}")
+            # print(f"Attempting to create NFStreamer for interface: {self.interface_name}")
             streamer = NFStreamer(
                 source=self.interface_name,
                 active_timeout=0,
@@ -61,7 +60,7 @@ class NetworkMonitor:
                 max_nflows=0  # No limit on number of flows
             )
             
-            print("NFStreamer instance created successfully")
+            # print("NFStreamer instance created successfully")
             
             for flow in streamer:
                 if time.time() - start_time >= self.capture_interval:
@@ -100,29 +99,13 @@ class NetworkMonitor:
             raise
             
         return flows
-            
-    def process_data(self):
-        """Process the captured data from the queue"""
-        while True:
-            try:
-                flows_df = self.data_queue.get()
-                test_bucket, test_flat_bucket = self.data_processor.prepare_data(flows_df)
-                
-                if test_bucket is not None and test_flat_bucket is not None:
-                    self.data_processor.analyze_traffic(test_bucket, test_flat_bucket)
-                    
-            except Exception as e:
-                print(f"Error in processing: {e}")
-                time.sleep(1)
                 
     def start_monitoring(self):
         """Start the monitoring threads"""
 
         capture_thread = Thread(target=self.continuous_capture, daemon=True)
-        process_thread = Thread(target=self.process_data, daemon=True)
         
         print(f"Starting continuous capture on interface [{self.interface_name}]...")
         capture_thread.start()
-        process_thread.start()
         
-        return capture_thread, process_thread 
+        return capture_thread

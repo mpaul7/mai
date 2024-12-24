@@ -28,6 +28,7 @@ def check_memory_usage():
 
 def cleanup_memory():
     """Force garbage collection"""
+    # print("Cleaning up memory...")
     gc.collect()
 
 def document_generator(test_flat_bucket):
@@ -108,16 +109,17 @@ def process_data(data_queue, stop_event):
     """
     memory_threshold = 1000  # MB
     batch_size = 500
+    print(f"Starting process_data thread")
     
     try:
         # Initialize Elasticsearch with optimized settings
         es = Elasticsearch(
             ['http://localhost:9200'],
-            maxsize=25,
-            timeout=30,
+            connections_per_node=25,
+            request_timeout=30,
             retry_on_timeout=True,
             sniff_on_start=True,
-            sniff_on_connection_fail=True
+            sniff_on_node_failure=True
         )
         
         # Optimize index settings for bulk loading
@@ -150,9 +152,11 @@ def process_data(data_queue, stop_event):
         es.indices.put_settings(index='dns_flows', body=index_settings)
 
         while not stop_event.is_set():
+            # print(f"Processing data. while not stop_event.is_set()")
             try:
                 # Check memory usage
                 current_memory = check_memory_usage()
+                # print(f"Current memory usage: {current_memory:.2f}MB")
                 if current_memory > memory_threshold:
                     logging.warning(f"High memory usage ({current_memory:.2f}MB). Cleaning up...")
                     cleanup_memory()
@@ -160,17 +164,20 @@ def process_data(data_queue, stop_event):
                     continue
 
                 flows_df = data_queue.get(timeout=1)
+                # print(f"Received flows_df: {flows_df.head()}")
 
                 # Data preparation and prediction
                 data_preparation = DataPreparation(df=flows_df)
+                # print(f"Data preparation: {data_preparation}")
                 test_bucket, test_flat_bucket = data_preparation.bucketize_data(bucket_size=3, df=flows_df)
                 test_flat_bucket['bucket'] = test_flat_bucket['bucket'].fillna(0)
 
-                pipe = joblib.load('/home/solana/projects/mai/results/dns_attack_model.joblib')
+                pipe = joblib.load('/home/mpaul/projects/mpaul/mai/results/dns_attack_model.joblib')
                 X_test = test_bucket[['pkt_flow_count_ratio']]
 
                 y_pred = pipe.predict(X_test)
                 y_pred_labels = np.where(y_pred == -1, 'dns_attack', 'dns')
+                # print(f"y_pred_labels: {y_pred_labels}")
                 test_bucket['predicted_label'] = y_pred_labels
 
                 # Label flows
@@ -182,11 +189,13 @@ def process_data(data_queue, stop_event):
                 for bucket in non_attack_buckets:
                     test_flat_bucket.loc[test_flat_bucket['bucket'] == bucket, 'label'] = 'dns'
 
+                # print(f"test_flat_bucket: {test_flat_bucket.head()}")
                 logging.info(f"Label distribution: {test_flat_bucket.groupby('label').size().to_dict()}")
 
                 # Optimized Elasticsearch bulk insertion using streaming
                 try:
                     success_count = 0
+                    print(f"Starting Elasticsearch bulk insertion")
                     for ok, response in helpers.streaming_bulk(
                         es,
                         (
@@ -202,11 +211,13 @@ def process_data(data_queue, stop_event):
                         raise_on_error=False,
                         max_chunk_bytes=10485760  # 10MB chunk size
                     ):
+                        print(f"ok: {ok}")
+                        print(f"response: {response}")
                         if ok:
                             success_count += 1
+                            print(f"Successfully indexed {success_count} documents")
                         else:
                             logging.error(f"Error in document: {response}")
-                    
                     logging.info(f"Successfully indexed {success_count} documents")
 
                 except Exception as e:
@@ -238,7 +249,7 @@ def process_data(data_queue, stop_event):
         logging.info("Processing thread cleaning up resources.")
 
 def main():
-    interface = "eno1"  # Change this to match your network interface
+    interface = "enp0s31f6"  # Change this to match your network interface
     capture_interval = 15
     stop_event = threading.Event()
 
