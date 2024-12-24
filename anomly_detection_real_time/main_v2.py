@@ -29,28 +29,27 @@ def continuous_capture(interface_name, data_queue, interval=60):
             
             # Create a new streamer instance for each capture window
             streamer = NFStreamer(
-                source=interface_name,
+                source='eno1',
                 active_timeout=0,
                 idle_timeout=0,
                 accounting_mode=1)
             
             flows = []
-            
-            # Collect flows for the specified interval
-            for flow in streamer:
-                if time.time() - start_time >= interval:
-                    del streamer  # Properly cleanup the streamer
-                    break
-                simulated_fwd_bwd_count = {
+            simulated_fwd_bwd_count = {
                 1: [0, 1, 2],  2: [0, 1, 2, 3],  3: [0, 1, 2, 3], 
                 10: [10],  0: [0, 2, 3, 4, 5, 6, 7, 8, 10],  4: [2, 3, 4],  8: [8], 
                 5: [4, 5],  6: [6],  7: [0, 7], 11: [11],  
                 9: [9], 12: [12], 64: [64], 62: [62], 13: [13]
                 }
-                pkt_fwd_count_list = [ 1,  2,  3, 10,  0,  4,  8,  5,  6,  7, 11,  9, 12, 64, 62, 13]
-                pkt_fwd_count = pkt_fwd_count_list[int(len(pkt_fwd_count_list) * np.random.random())]
-                pkt_bwd_key_values = simulated_fwd_bwd_count[pkt_fwd_count]
-                pkt_bwd_count = pkt_bwd_key_values[int(len(pkt_bwd_key_values) * np.random.random())]
+            pkt_fwd_count_list = [ 1,  2,  3, 10,  0,  4,  8,  5,  6,  7, 11,  9, 12, 64, 62, 13]
+            pkt_fwd_count = pkt_fwd_count_list[int(len(pkt_fwd_count_list) * np.random.random())]
+            pkt_bwd_key_values = simulated_fwd_bwd_count[pkt_fwd_count]
+            pkt_bwd_count = pkt_bwd_key_values[int(len(pkt_bwd_key_values) * np.random.random())]
+            # Collect flows for the specified interval
+            for flow in streamer:
+                if time.time() - start_time >= interval:
+                    del streamer  # Properly cleanup the streamer
+                    break
                 flows.append({
                     'sip': flow.src_ip,
                     'sport': flow.src_port,
@@ -99,7 +98,7 @@ def process_data(data_queue):
             test_bucket, test_flat_bucket = data_preparation.bucketize_data(bucket_size=3, df=_test_df)
             test_flat_bucket['bucket'] = test_flat_bucket['bucket'].fillna(0)
             # print(test_bucket, 222)
-            pipe_path = '/home/mpaul/projects/mpaul/mai/results/dns_attack_model.joblib'
+            pipe_path = '/home/solana/projects/mai/results/dns_attack_model.joblib'
             pipe = joblib.load(pipe_path)
             
             X_test = test_bucket[['pkt_flow_count_ratio']]
@@ -136,8 +135,6 @@ def process_data(data_queue):
                 # print(test_flat_bucket.head())
                 # attack_flows.append(bucket_flows)
             print(test_flat_bucket.shape)
-            test_flat_bucket = test_flat_bucket.head(25)
-            print(test_flat_bucket.groupby('label').size())
             # Prepare data for Elasticsearch
             es_data = []
             for _, row in test_flat_bucket.iterrows():
@@ -222,7 +219,7 @@ def process_data(data_queue):
             time.sleep(1)
 
 if __name__ == "__main__":
-    interface = "enp0s31f6"  
+    interface = "eno1"  
     capture_interval = 15
     
     # Create a queue for communication between threads

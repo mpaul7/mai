@@ -89,6 +89,8 @@ def main():
         
     # Train the model and get the trained pipeline
     pipe = model_handle.train_model()
+
+    
     
     # Save the trained pipeline
     dump(pipe, '/home/mpaul/projects/mpaul/mai/results/dns_attack_model.joblib')
