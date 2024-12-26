@@ -11,11 +11,12 @@ class ElasticsearchClient:
             # returnd
             
         try:
-            index_name = f"network_flows"
+            index_name = f"dns_flows"
             data_dict = data.to_dict(orient='records')
             
             for record in data_dict:
-                self.es_client.index(index=index_name, document=record)
+                res = self.es_client.index(index=index_name, document=record)
+                print(res)
             print(f"Successfully indexed {len(data_dict)} documents")
 
         except Exception as e:
