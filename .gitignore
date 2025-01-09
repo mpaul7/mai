@@ -1,4 +1,9 @@
-# Python
+# Log directories
+logs-cnn/
+logs-lstm/
+logs-mlp/
+
+# Common Python-related files to ignore
 __pycache__/
 *.py[cod]
 *$py.class
@@ -20,19 +25,12 @@ var/
 .installed.cfg
 *.egg
 
-# Virtual Environment
+# Virtual environment
 venv/
 ENV/
 
-# IDE
+# IDE specific files
 .idea/
 .vscode/
 *.swp
 *.swo
-
-# Project specific
-/data/
-*.csv
-*.log 
-
-mai/anomly_detection_real_time/results/

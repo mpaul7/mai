@@ -1,0 +1,3 @@
+dns,dns_attack,total_flows,recall,precision,weighted_precision,f1_score
+86,1,87,98.85,74.14,84.14,90.9
+30,131,161,81.37,99.24,98.61,89.16
