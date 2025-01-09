@@ -34,3 +34,6 @@ ENV/
 .vscode/
 *.swp
 *.swo
+
+# data files
+data/
