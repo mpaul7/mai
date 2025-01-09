@@ -49,9 +49,7 @@ class ThreeFeatureTypeModelFactoryMixin:
 
         if 'lstm' in params.structure:
             # Packet sequence inputs to multi-input model
-            pktseq_inputs = {name: layers.Input(shape=(params.sequence_length,), dtype=tf.float32, name=name) for name
-                             in
-                             params.packet_feature_name}
+            pktseq_inputs = {name: layers.Input(shape=(params.sequence_length,), dtype=tf.float32, name=name) for name in params.packet_feature_name}
             # normalize input of first two packet features
             pktseq_x1 = layers.Concatenate(axis=-1)(list(pktseq_inputs.values())[:2])
             pktseq_x1 = layers.Reshape(target_shape=(params.sequence_length, len(params.packet_feature_name[:2])))(
@@ -288,6 +286,7 @@ class ThreeFeatureTypeDatasetFactoryMixin:
             # when the structure only contains cnn as input branch, i.e. the feature array only contains one feature
             # use the raw byte feature straight forward without forming a dictionary
             ds_X = tf.data.Dataset.from_tensor_slices(X_raw_bytes, name='X')
+            print("[cnn]")
         else:
             ds_X = tf.data.Dataset.from_tensor_slices(fea_dict, name='X')
 

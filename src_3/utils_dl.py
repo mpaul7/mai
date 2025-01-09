@@ -15,7 +15,7 @@ KERAS_INITIALIZER = {
     'he_normal': tf.keras.initializers.HeNormal
 }
 
-def create_dl_model_cnn_v2(params):
+def create_dl_model_cnn_xx(params):
 
     
     """Create input layers for packet sequence data """
@@ -77,13 +77,11 @@ def create_dl_model_cnn_v2(params):
     return inputs, pktseq_x
 
 """Create Keras DL model - CNN"""
-def create_dl_model_cnn(params):
+def create_dl_model_cnn_v2(params):
 
-    
     """Create input layers for packet sequence data """
-    """Create input layers for packet sequence data """
-    inputs = {name: layers.Input(shape=(params['sequence_length'],), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
-
+    inputs = {name: layers.Input(shape=(params['stat_length'],), dtype=tf.float32, name=name) for name in params['stat_packet_feature']}
+    # inputs = {name: layers.Input(shape=(150,), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
     """Stack input layers"""
     pktseq_x = tf.stack(list(inputs.values()), axis=2)
     # pktseq_x = layers.Reshape(target_shape=(params['sequence_length'], 1))(list(inputs.values())[-1])
@@ -124,6 +122,53 @@ def create_dl_model_cnn(params):
     # model = models.Model(inputs=[inputs], outputs=outputs)
 
     return inputs, pktseq_x
+
+def create_dl_model_cnn(params):
+
+    """Create input layers for packet sequence data """
+    inputs = {name: layers.Input(shape=(params['stat_length'],), dtype=tf.float32, name=name) for name in params['stat_packet_feature']}
+    # inputs = {name: layers.Input(shape=(150,), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
+    """Stack input layers"""
+    pktseq_x = tf.stack(list(inputs.values()), axis=2)
+    # pktseq_x = layers.Reshape(target_shape=(params['sequence_length'], 1))(list(inputs.values())[-1])
+
+    pktseq_x = layers.Conv1D(200, kernel_size=7, strides=1, padding='same', input_shape=(None, 3))(pktseq_x)
+    pktseq_x = layers.ReLU()(pktseq_x)
+    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+
+    pktseq_x = layers.Conv1D(200, kernel_size=5, strides=1, padding='same')(pktseq_x)
+    pktseq_x = layers.ReLU()(pktseq_x)
+    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+
+    pktseq_x = layers.Conv1D(200, kernel_size=5, strides=1, padding='same')(pktseq_x)
+    pktseq_x = layers.ReLU()(pktseq_x)
+    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+
+    pktseq_x = layers.Conv1D(200, kernel_size=4, strides=1, padding='same')(pktseq_x)
+    pktseq_x = layers.ReLU()(pktseq_x)
+    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+
+    pktseq_x = layers.Conv1D(300, kernel_size=3, strides=1, padding='valid')(pktseq_x)
+    pktseq_x = layers.ReLU()(pktseq_x)
+    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+
+    pktseq_x = layers.Conv1D(300, kernel_size=3, strides=1, padding='valid')(pktseq_x)
+    pktseq_x = layers.ReLU()(pktseq_x)
+    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+
+    pktseq_x = layers.Conv1D(300, kernel_size=2, strides=2, padding='valid')(pktseq_x)
+    pktseq_x = layers.ReLU()(pktseq_x)
+
+    pktseq_x = layers.GlobalAveragePooling1D()(pktseq_x)
+    pktseq_x = layers.BatchNormalization(axis=-1, epsilon=1e-05, momentum=0.9, center=True, scale=True)(pktseq_x)
+    pktseq_x = layers.Dropout(0.5)(pktseq_x)
+
+    """Output layer"""
+    # outputs = layers.Dense(output_units, activation='softmax', name='softmax')(pktseq_x)
+    # model = models.Model(inputs=[inputs], outputs=outputs)
+
+    return inputs, pktseq_x
+
 
 """Create Keras DL model - LSTM"""
 def create_dl_model_lstm(params):
@@ -185,11 +230,14 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
     model_type = params['model_types']
     features = []
     if 'mlp' in model_type:
+        # print("mlp")
         features.extend(params['features'])
     if 'lstm' in model_type:
+        # print("lstm")
         features.extend(params['seq_packet_feature'])
     if 'cnn' in model_type:
-        features.extend(params['seq_packet_feature'])
+        # print("cnn")
+        features.extend(params['stat_packet_feature'])
     features.extend([params['target_column']])
  
     X = df.loc[:, features]
@@ -210,8 +258,9 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
             feat_dict['pktseq_features'] = X_pktseq
 
         if 'cnn' in model_type:
-            X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['seq_packet_feature']].items()}
-            feat_dict['pktseq_features'] = X_pktseq
+            X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['stat_packet_feature']].items()}
+            # print(X_pktseq, 3333)
+            feat_dict['pktstat_features'] = X_pktseq
         
         # if 'cnn' in model_type:
         #     # when the structure only contains cnn as input branch, i.e. the feature array only contains one feature
@@ -228,10 +277,13 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
         return tf_dataset
     
     def create_dataset_original(X, y, features):
+
         feat_dict = {}
+
         if 'mlp' in model_type:
             X_flow = {name: np.stack(value) for name, value in X.loc[:, params['features']].items()}
             feat_dict['flow_features'] = X_flow
+
         if 'lstm' in model_type:
             if len(params['seq_packet_feature']) > 1:
                 X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['seq_packet_feature']].items()}
@@ -249,7 +301,7 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
             ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
 
         print(feat_dict, 6666)
-        # ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
+        ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
         ds_y = tf.data.Dataset.from_tensor_slices(y)
         tf_dataset = tf.data.Dataset.zip((ds_X, ds_y))
         return tf_dataset
@@ -259,8 +311,11 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
         # by finding the index of the maximum value in each row of one-hot encoded y
         df = pd.DataFrame({params['target_column']: y.idxmax(axis=1)})
         partials = []
+        # print(df.groupby(params['target_column']).size())
         for _, group in df.groupby(params['target_column']):
+
             partials.append(create_dataset(X.loc[group.index], y.loc[group.index], features).repeat())
+        # print(partials, 77777)
         return tfd.Dataset.sample_from_datasets(partials)
 
     if train:

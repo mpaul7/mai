@@ -20,6 +20,7 @@ def create_cnn_model(input_shape, num_classes):
     
     # Reshape input to add a channel dimension
     x = layers.Reshape((input_shape[0], 1))(inputs)  # Reshape to (57, 1)
+    print(x.shape)
     
     # Convolutional layers
     x = layers.Conv1D(32, kernel_size=3, activation='relu')(x)  # 32 filters, kernel size 3
@@ -28,7 +29,7 @@ def create_cnn_model(input_shape, num_classes):
     x = layers.Conv1D(64, kernel_size=3, activation='relu')(x)  # 64 filters
     x = layers.MaxPooling1D(pool_size=2)(x)  # Max pooling
     
-    x = layers.Conv1D(128, kernel_size=3, activation='relu')(x)  # 128 filters
+    x = layers.Conv1D(64, kernel_size=3, activation='relu')(x)  # 128 filters
     x = layers.MaxPooling1D(pool_size=2)(x)  # Max pooling
     
     # Flatten the output

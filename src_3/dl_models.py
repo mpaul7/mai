@@ -39,15 +39,13 @@ from tensorflow.keras.losses import CategoricalCrossentropy
 import utils_dl
 
 class ModelBuilder:
-    def __init__(self, params: dict, output_units: int):
+    def __init__(self, params: dict):
         """Initialize ModelBuilder with configuration parameters.
         
         Args:
             params (dict): Model configuration parameters
-            output_units (int): Number of output units for the model
         """
         self.params = params
-        self.output_units = output_units
 
     def build_model(self) -> Model:
         """Builds and returns the complete model architecture.
@@ -56,7 +54,10 @@ class ModelBuilder:
             Model: Compiled Keras model ready for training
         """
         input_branches = self._build_model_branches()
-        return self._create_final_model(input_branches)
+        model_arch = self._create_final_model(input_branches)
+        """ Visualize model """
+        tf.keras.utils.plot_model(model_arch, self.params['model_plot'], show_shapes=True)
+        return model_arch   
 
     def _build_model_branches(self) -> dict:
         """Builds the input branches based on model types specified in params.
@@ -95,7 +96,6 @@ class ModelBuilder:
         if len(input_branches['layer']) > 1:
             x = tf.keras.layers.concatenate(input_branches['layer'])
         else:
-            print(input_branches['layer'], 999)
             x = input_branches['layer'][0]
         
         # Add encoder dense layers
@@ -117,7 +117,7 @@ class ModelBuilder:
             x = layers.Dropout(self.params["final_dense_dropout_rate"], name=f'final_dropout_{i}')(x)
         
         # Add output layer
-        outputs = tf.keras.layers.Dense(self.output_units, activation='softmax', name='softmax')(x)
+        outputs = tf.keras.layers.Dense(self.params['output_units'], activation='softmax', name='softmax')(x)
         
         # Create final model
         model = models.Model(inputs=input_branches['inputs'], outputs=outputs)
@@ -202,11 +202,15 @@ class ModelBuilderTransferLearning:
         print('Creates the final model by adding dense layers on top of a pre-trained model.')
         # Load the pre-trained model
         # base_model = load_model('/home/mpaul/projects/mpaul/mai/models/mlp_lstm_cnn_20241203190916.h5')
+        
+        # model # 10
+        # base_a = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/2_lstm_120_20250106223118.h5')
+        # base_b = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/4_cnn_120_20250107115237.h5')
 
-        base_a = load_model('/home/mpaul/projects/mpaul/mai/models_dec09/mlp_120_20241209115534.h5')
-        # base_lstm = load_model('/home/mpaul/projects/mpaul/mai/models/pretrained_models/lstm_20241205112211.h5')
-        base_b = load_model('/home/mpaul/projects/mpaul/mai/models_dec09/lstm_120_20241209131846.h5')
-
+        # model # 9
+        base_a = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/1_mlp_120_20250106215848.h5')
+        base_b = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/2_lstm_120_20250106223118.h5')
+        
         print("Model A Layers:")
         for i, layer in enumerate(base_a.layers):
             print(f"Layer {i}: {layer.name} ({layer.__class__.__name__})")
@@ -220,10 +224,14 @@ class ModelBuilderTransferLearning:
         #     print(f"Layer {i}: {layer.name} ({layer.__class__.__name__})")
 
         # print(base_mlp.layers[64].output)   
+        
+        # model 8 - mlp - 65 , lstm - 13
+        # model 9 - mlp - 65, cnn 22
+        # model 10 - lstm - 13, cnn - 19
+        
 
         partial_model_a = Model(inputs=base_a.input, outputs=base_a.layers[65].output)  
         partial_model_b = Model(inputs=base_b.input, outputs=base_b.layers[13].output) 
-        # partial_model_c = Model(inputs=base_cnn.input, outputs=base_cnn.layers[30].output) 
         # base_model.trainable = False  # Freeze the base model layers
         for layer in partial_model_a.layers:
             if not isinstance(layer, layers.InputLayer):
@@ -280,7 +288,8 @@ class ModelBuilderTransferLearning:
         return combined_model
 
 class DLModels:
-    def __init__(self, train_file: str, config: str, test_file: str, trained_model_file: str):
+    
+    def __init__(self, train_file: str, params: dict, model_arch: Model, test_file: str, trained_model_file: str):
         """Initialize DLModels with configuration parameters.
         
         Args:
@@ -291,51 +300,42 @@ class DLModels:
         """
         # self.model_type = model_type
         self.train_file = train_file
+        self.model = model_arch
+        self.params = params
         self.test_file = test_file
         self.trained_model_file = trained_model_file
-        
-        # Load configuration
-        with open(config) as f:
-            self.params = json.load(f)
 
         # Setup output file
-        if self.trained_model_file is not None:
-            head, tail = os.path.split(self.trained_model_file)
-            self.output_file = os.path.join( f'{self.params["project_home"]}/results_dec09/', tail.replace('.h5', '.csv'))
-        
-        # Setup model files with date and time
-        current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-        model_name = "_".join(model_type for model_type in self.params['model_types'])
-        self.MODEL_JSON = f'{model_name}_{current_datetime}.json'
-        self.MODEL_PNG = f'{model_name}_{current_datetime}.png'
-        self.MODEL_H5 = f'{model_name}_{self.params["epochs"]}_{current_datetime}.h5'    
-        self.MODEL_CSV = f'{model_name}_{current_datetime}.csv'
-        self.output_units = len(self.params['labels'])
+        # if self.trained_model_file is not None:
+        #     head, tail = os.path.split(self.trained_model_file)
+        #     self.output_file = os.path.join( f'{self.params["project_home"]}/results_dec30/', tail.replace('.h5', '.csv'))
 
-    def train_model(self) -> None:
-        """Trains a deep learning model based on historical feature view data.
-        saves the model in h5 format
+    def train_model(self) -> Model:
+        
+        """Trains a deep learning model.
+            Return: trained model
         """
-        # Build model using ModelBuilder
-        if self.params.get("use_transfer_learning", False):
-            print("Using Transfer Learning")
-            model_builder = ModelBuilderTransferLearning(self.params, self.output_units)
-        else:
-            model_builder = ModelBuilder(self.params, self.output_units)
-        model = model_builder.build_model()
+        # """ Build model using ModelBuilder """
+        # if self.params.get("use_transfer_learning", False):
+        #     model_builder = ModelBuilderTransferLearning(self.params, self.output_units)
+        # else:
+        #     model_builder = ModelBuilder(self.params)
+        # model = model_builder.build_model()
         
-        # Visualize model
-        tf.keras.utils.plot_model(model, f"{self.params['project_home']}/models_dec09/{self.MODEL_PNG}", show_shapes=True)
-        model.summary()
+        """ Visualize model """
+        tf.keras.utils.plot_model(self.model, self.params['model_plot'], show_shapes=True)
         
-        # Compile model
-        model.compile(
+        # """ Model Summary """
+        # model.summary()
+        
+        """ Compile model """
+        self.model.compile(
             loss=CategoricalCrossentropy(),
             optimizer=Adam(learning_rate=self.params['learning_rate']),
             metrics=['accuracy']
         )
         
-        # Prepare datasets
+        """ Prepare datasets """
         train_dataset, val_dataset = utils_dl.create_train_test_dataset_tf(
             data_file=self.train_file,
             params=self.params,
@@ -343,24 +343,23 @@ class DLModels:
             evaluation=False
         )
         
-        # Apply batching
+        """ Apply batching """
         train_dataset = train_dataset.batch(self.params['train_batch_size'])
         val_dataset = val_dataset.batch(self.params['test_batch_size'])
         
-        # Setup callbacks
+        """ Setup callbacks """
         callbacks = self._setup_callbacks()
         
-        # Train model
-        model.fit(
+        """ Train model """
+        self.model.fit(
             train_dataset,
             epochs=self.params['epochs'],
             steps_per_epoch=self.params['steps_per_epoch'],
             callbacks=callbacks
         )
         
-        # Save model
-        model.save(f"{self.params['project_home']}/models_dec09/{self.MODEL_H5}", save_format='h5')
-        
+        return self.model
+    
 
     def _setup_callbacks(self) -> list:
         """Sets up training callbacks based on configuration.
@@ -390,11 +389,7 @@ class DLModels:
     def test_model(self):
         """Model Evaluation
         
-        Parameters:
-            model_type: Type of model (lstm, mlp, cnn)
-            trained_model_file: Path to trained model file
-            test_file: Path to test data file
-            output_file: Path to save evaluation results
+        outputs a confusion matrix
         """
 
         """Load Trained Model"""
@@ -423,7 +418,5 @@ class DLModels:
             _confusion_matrix=_confusion_matrix_flow_count,
             traffic_classes=labels
         )
-
-        nl = '\n'
-        matrix.to_csv(self.output_file)
-        click.echo(f"{nl}Confusion Matrix Flow Count Based{nl}{'=' * 33}{nl}{matrix}{nl}")
+        
+        return matrix
