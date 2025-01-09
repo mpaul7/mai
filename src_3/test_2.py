@@ -79,10 +79,12 @@ print(df_seq_scaled)
 
 print(df_seq_scaled['splt_ps'].values.tolist())
 # After creating df_seq_scaled, merge it with the main df
-# df['splt_ps'] = df_seq_scaled['splt_ps'].values.tolist()
-# df['splt_piat'] = df_seq_scaled['splt_piat'].values.tolist()
+df['splt_ps'] = df_seq_scaled['splt_ps'].values
+df['splt_piat'] = df_seq_scaled['splt_piat'].values
 
 # print(df.splt_ps)
+
+print(df['splt_piat'].iloc[0])
 
 # # Now df contains both the original and scaled sequential features
 # print("Final DataFrame shape:", df.shape)
