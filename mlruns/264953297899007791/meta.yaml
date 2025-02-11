@@ -1,0 +1,7 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/264953297899007791
+creation_time: 1738352270907
+experiment_id: '264953297899007791'
+last_update_time: 1738429911771
+lifecycle_stage: active
+name: cnn_120_solana_cnn_stat_v1
+tags: {}

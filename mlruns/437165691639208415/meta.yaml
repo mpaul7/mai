@@ -1,0 +1,6 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/437165691639208415
+creation_time: 1738113188901
+experiment_id: '437165691639208415'
+last_update_time: 1738113188901
+lifecycle_stage: active
+name: cnn_120_dropout_rate_v1

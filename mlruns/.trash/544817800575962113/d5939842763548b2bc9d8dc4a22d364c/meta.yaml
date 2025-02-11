@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/544817800575962113/d5939842763548b2bc9d8dc4a22d364c/artifacts
+deleted_time: 1737997384082
+end_time: null
+entry_point_name: ''
+experiment_id: '544817800575962113'
+lifecycle_stage: deleted
+run_id: d5939842763548b2bc9d8dc4a22d364c
+run_name: agreeable-sheep-911
+run_uuid: d5939842763548b2bc9d8dc4a22d364c
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737995726400
+status: 1
+tags: []
+user_id: mpaul

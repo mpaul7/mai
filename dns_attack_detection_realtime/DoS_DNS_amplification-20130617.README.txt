@@ -1,0 +1,252 @@
+                                         LANDER:DoS DNS amplification-20130617
+
+   From Predict
+
+   README version: 5529, last modified: 2016-11-23.
+
+   This file describes the trace dataset "DoS_DNS_amplification-20130617" provided by the LANDER project.
+
+Contents
+
+     • 1 LANDER Metadata
+     • 2 Background
+     • 3 Dataset Contents
+     • 4 Data Format
+     • 5 Collection Method
+          • 5.1 Recursive Server Setup
+          • 5.2 Query Generation
+          • 5.3 Spoofing Source Addresses
+          • 5.4 Executing Attack
+          • 5.5 Beginning/Ending Date and Time Zone
+     • 6 Citation
+     • 7 Results Using This Dataset
+     • 8 User Annotations
+
+LANDER Metadata
+
+   ┌───────────────────────────┬────────────────────────────────────────────────────────────────────────────────────┐
+   │ dataSetName               │ DoS_DNS_amplification-20130617                                                     │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ status                    │ usc-web-and-predict                                                                │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ shortDesc                 │ DoS DNS Amplification Attack                                                       │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ longDesc                  │ This dataset contains one DNS amplification/reflection attack, staged by           │
+   │                           │ researchers between two sites (USC/ISI, Marina del Rey, California to CSU, Fort    │
+   │                           │ Collins, Colorado). It lasts for about 10 minutes. Packet headers are fully        │
+   │                           │ anonymized.                                                                        │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ datasetClass              │ Quasi-Restricted                                                                   │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ commercialAllowed         │ true                                                                               │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ requestReviewRequired     │ true                                                                               │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ productReviewRequired     │ false                                                                              │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ ongoingMeasurement        │ false                                                                              │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ submissionMethod          │ Upload                                                                             │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ collectionStartDate       │ 2013-06-17                                                                         │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ collectionStartTime       │ 21:52:45                                                                           │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ collectionEndDate         │ 2013-06-17                                                                         │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ collectionEndTime         │ 22:25:32                                                                           │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ availabilityStartDate     │ 2014-03-14                                                                         │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ availabilityStartTime     │ 17:03:00                                                                           │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ availabilityEndDate       │ 2030-01-01                                                                         │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ availabilityEndTime       │ 00:00:00                                                                           │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ anonymization             │ cryptopan/full                                                                     │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ archivingAllowed          │ false                                                                              │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ keywords                  │ category:synthetically-generated-data, subcategory:experimental-data,              │
+   │                           │ packet-header, dos, one-time                                                       │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ format                    │ dag                                                                                │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ access                    │ https                                                                              │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ hostName                  │ USC-LANDER                                                                         │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ providerName              │ USC                                                                                │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ groupingId                │                                                                                    │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ groupingSummaryFlag       │ false                                                                              │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ retrievalInstructions     │ download                                                                           │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ byteSize                  │ 1312817152                                                                         │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ expirationDays            │ 14                                                                                 │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ uncompressedSize          │ 5432836857                                                                         │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ impactDoi                 │ 10.23721/109/1353940                                                               │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ useAgreement              │ dua-ni-160816                                                                      │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ irbRequired               │ false                                                                              │
+   ├───────────────────────────┼────────────────────────────────────────────────────────────────────────────────────┤
+   │ privateAccessInstructions │ See https://ant.isi.edu/datasets/#getting-datasets for information on obtaining    │
+   │                           │ this dataset.                                                                      │
+   │                           │ See                                                                                │
+   └───────────────────────────┴────────────────────────────────────────────────────────────────────────────────────┘
+
+Background
+
+   DNS amplification reflection attacks (for example, described here (us-cert)) involve an attacker sending a flood
+   of DNS ANY requests to one or several DNS servers, while spoofing source address to that of the intended target. A
+   poorly configured recursive DNS server will send a much larger reply to the target, thus amplifying the attack.
+
+   We've staged such an attack between two sites we controlled: ISI/USC in Marina Del Rey hosted 6 recursive DNS
+   servers and a single system at Colorado State in Fort Collins was an intended target. Another system at ISI was
+   acting as an attacker.
+
+   In this staged attack, we anonymize and scrub all non-attack traffic. Since the attack traffic was generated only
+   as part of this experiment (completely under the control of the experimenter), it is known to not have any privacy
+   concerns, and we preserve payloads of traffic specific to the attack.
+
+Dataset Contents
+
+   DoS_DNS_amplification-20130617.README.txt      copy of this README
+   data/
+       20130617-*.full.erf.bz2                    bzip2 compressed ERF network trace
+       .sha1sum                                   SHA-1 checksum
+   named/
+        named.conf                                configuration file for named
+   snort/                                              snort_rules                     snort rules file used to
+                                                                                       detect inbound attack
+        snort_alerts.txt                          snort alerts (fine name + CSV snort
+                                                  output)
+
+   Subdirectory "data" contains four bzipped ERF network traces collected by LANDER running at CSU (target) site. All
+   IP addresses were fully anonymized using prefix-preserving anonymization. The following anonymized IP addresses
+   are of interest:
+
+ DNS Servers
+
+ 145.233.157.224
+ 145.233.157.228
+ 145.233.157.232
+ 145.233.157.233
+ 145.233.157.234
+ 145.233.157.235
+
+ Target
+
+ 144.154.222.228
+
+   Attacker
+
+ 145.233.157.236 #probably not present in the traces, listed here for completeness
+
+   The file ".sha1sum" contains SHA1 checksums of individual compressed files. The integrity of the distribution thus
+   can be checked by independently calculating SHA1 sums of files and comparing them with those listed in the file.
+   If you have the sha1sum utility installed on your system, you can do that by executing:
+
+     sha1sum --check .sha1sum
+
+   This has to be done before files are uncompressed.
+
+   Subdirectory "snort" contain snort rules used for attack detection and snort output for each file (CSV) in a
+   simple text file.
+
+   Subdirectory "named" contains BIND named config file used on servers.
+
+Data Format
+
+   All data files are in ERF format, compressed with bzip2. IP addresses are fully anonymized.
+
+   For processing suggestions, see [1]
+
+Collection Method
+
+   All traffic entering the CSU site was captured by a system running LANDER. Raw captured packets were run through
+   SNORT running a custom rule detecting the attack. Thus flagged network traces were scrubbed (user payloads
+   removed, all except for our own generated attack traffic) and IP addresses were fully anonymized using
+   prefix-preserving anonymization.
+
+  Recursive Server Setup
+
+   We've included the named configuration file named.conf used in this setup. Very few changes were made, aside from
+   restricting the server, we just increased UDP and EDNS sizes.
+
+  Query Generation
+
+   To generate a query of type ANY, the following command was used:
+
+ dig ANY isc.org @servername +notcp +bufsize=8192
+
+   where <servername> is the name or IP address of the recursive DNS name server.
+
+   We've captured the raw query using tcpdump, then replicated it multiple times for each server.
+
+  Spoofing Source Addresses
+
+   We've used tcprewrite to modify (spoof) source address of the query.
+
+  Executing Attack
+
+   The following command was executed to
+
+ tcpreplay -i em1 --loop XXX --pps 400 --preload-pcap /path/to/pcap/file/with/queries.pcap
+
+   Thus, we replay queries at 400 packets per second, each packet containing a UDP DNS quiery, directed to one of 6
+   servers in round-robin fashion. Each IP packet is 64 bytes long, thus the bit rate of the attack before
+   amplification/reflection is 64*400*8=205Kbps.
+
+  Beginning/Ending Date and Time Zone
+
+   The attack starts at 22:00:12 and ends at 22:15:34
+
+   Dates/Times specified in the metadata and here are in UTC.
+
+Citation
+
+   If you use this trace to conduct additional research, please cite it as:
+
+   Scrambled Internet Trace Measurement dataset, IMPACT ID: USC-LANDER/DoS_DNS_amplification-20130617/rev5529 .
+   Traces taken 2013-06-17 to 2013-06-17. Provided by the USC/LANDER project (http://www.isi.edu/ant/lander).
+
+Results Using This Dataset
+
+   Traces similar to this one containing collections of "live" IP addresses have been used the following previously
+   published work:
+
+     • Alefiya Hussain, Yuri Pradkin, and John Heidemann. Replay of Malicious Traffic in Network Testbeds. submitted
+       to HST xxx
+
+User Annotations
+
+
+   Notes from jberkes:
+
+   The target of the attack sends out a large volume of "ICMP destination unreachable" messages back to the
+   amplifying DNS servers. What's noteworthy is that the ICMP messages are unusually large. ICMP destination
+   unreachable messages have a minimum of 8 bytes of payload, but this host is sending hundreds of bytes of payload
+   (containing the large DNS replies). This adds up a significant amount of traffic volume.
+
+   A potential lesson from this: it may be a good idea for hosts to limit the size of their ICMP error responses. In
+   case of a DNS amplification attack like this one, the ICMP responses (if they carry too much payload) create
+   significant traffic.
+
+   There's a lot of ICMP pinging activity, at high packet rates, from 144.154.222.236 making up a significant volume
+   of the total traffic. The IP isn't mentioned in the README either and is not a reflector, nor the target of the
+   attack. This IP is possibly involved in the Internet census and survey operations.
+
+   Categories:
+     • Datasets
+     • LANDER
+     • LANDER:Datasets
+     • LANDER:PredictCategory:IP Packet Headers
+     • LANDER:PredictCategory:IP Packet Headers/USC Phase I IP Packet Header Data

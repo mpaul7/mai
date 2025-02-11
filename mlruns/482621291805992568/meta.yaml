@@ -1,0 +1,6 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/482621291805992568
+creation_time: 1738270286520
+experiment_id: '482621291805992568'
+last_update_time: 1738270286520
+lifecycle_stage: active
+name: cnn_120_learning_rate_v3_non_augmented

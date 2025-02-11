@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/545524264561218751/f1874d4fc0c94f749da1729cbaad5c30/artifacts
+deleted_time: 1737995673449
+end_time: 1737658203912
+entry_point_name: ''
+experiment_id: '545524264561218751'
+lifecycle_stage: deleted
+run_id: f1874d4fc0c94f749da1729cbaad5c30
+run_name: powerful-goat-348
+run_uuid: f1874d4fc0c94f749da1729cbaad5c30
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737658197775
+status: 3
+tags: []
+user_id: mpaul

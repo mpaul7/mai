@@ -1,0 +1,7 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/751096724326604280
+creation_time: 1737998202003
+experiment_id: '751096724326604280'
+last_update_time: 1738004423440
+lifecycle_stage: deleted
+name: LSTM-MLflow-Demo5
+tags: {}

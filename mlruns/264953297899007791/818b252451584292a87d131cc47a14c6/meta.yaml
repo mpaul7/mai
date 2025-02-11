@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/264953297899007791/818b252451584292a87d131cc47a14c6/artifacts
+deleted_time: 1738422576381
+end_time: null
+entry_point_name: ''
+experiment_id: '264953297899007791'
+lifecycle_stage: deleted
+run_id: 818b252451584292a87d131cc47a14c6
+run_name: regularization_value_0.0001
+run_uuid: 818b252451584292a87d131cc47a14c6
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738422434681
+status: 1
+tags: []
+user_id: mpaul

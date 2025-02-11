@@ -1,0 +1,28 @@
+{
+    "baseline": {"name": "baseline"},
+    
+    "l1_reg": {
+        "name": "l1_regularization",
+        "values": [0.01, 0.001, 0.0001]
+    },
+    
+    "l2_reg": {
+        "name": "l2_regularization",
+        "values": [0.01, 0.001, 0.0001]
+    },
+    
+    "dropout": {
+        "name": "dropout",
+        "values": [0.1, 0.3, 0.5]
+    },
+    
+    "learning_rate": {
+        "name": "learning_rate",
+        "values": [0.1, 0.01, 0.001, 0.0001]
+    },
+    
+    "early_stopping": {
+        "name": "early_stopping",
+        "values": [5, 10, 15]  
+    }
+}

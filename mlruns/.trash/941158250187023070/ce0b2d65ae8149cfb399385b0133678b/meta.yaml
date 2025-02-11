@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/941158250187023070/ce0b2d65ae8149cfb399385b0133678b/artifacts
+deleted_time: 1738151739873
+end_time: null
+entry_point_name: ''
+experiment_id: '941158250187023070'
+lifecycle_stage: deleted
+run_id: ce0b2d65ae8149cfb399385b0133678b
+run_name: l1_0.001
+run_uuid: ce0b2d65ae8149cfb399385b0133678b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738115017869
+status: 1
+tags: []
+user_id: mpaul

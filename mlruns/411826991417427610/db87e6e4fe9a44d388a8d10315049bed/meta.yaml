@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai2/mlruns/411826991417427610/db87e6e4fe9a44d388a8d10315049bed/artifacts
+deleted_time: 1739140776209
+end_time: 1739064875450
+entry_point_name: ''
+experiment_id: '411826991417427610'
+lifecycle_stage: deleted
+run_id: db87e6e4fe9a44d388a8d10315049bed
+run_name: Solana_data_nfs_features_twc_label_mlp_v2_learning_rate_0.01
+run_uuid: db87e6e4fe9a44d388a8d10315049bed
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739064648775
+status: 3
+tags: []
+user_id: mpaul

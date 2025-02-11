@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/386301579650153543/06c0e1e949bd4542a11d0c4ec79fba75/artifacts
+deleted_time: 1737995667351
+end_time: 1737659558817
+entry_point_name: ''
+experiment_id: '386301579650153543'
+lifecycle_stage: deleted
+run_id: 06c0e1e949bd4542a11d0c4ec79fba75
+run_name: sassy-quail-790
+run_uuid: 06c0e1e949bd4542a11d0c4ec79fba75
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737659541744
+status: 3
+tags: []
+user_id: mpaul

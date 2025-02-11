@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/276462021201242281/1e795d85cdba41768fac947af0eb3a92/artifacts
+deleted_time: 1737995664237
+end_time: 1737660871292
+entry_point_name: ''
+experiment_id: '276462021201242281'
+lifecycle_stage: deleted
+run_id: 1e795d85cdba41768fac947af0eb3a92
+run_name: gentle-chimp-230
+run_uuid: 1e795d85cdba41768fac947af0eb3a92
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737660859015
+status: 3
+tags: []
+user_id: mpaul

@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/386301579650153543/e016f0c0519b49dba99c30d48b173780/artifacts
+deleted_time: 1737995667351
+end_time: 1737991658973
+entry_point_name: ''
+experiment_id: '386301579650153543'
+lifecycle_stage: deleted
+run_id: e016f0c0519b49dba99c30d48b173780
+run_name: grandiose-auk-527
+run_uuid: e016f0c0519b49dba99c30d48b173780
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737991643232
+status: 3
+tags: []
+user_id: mpaul

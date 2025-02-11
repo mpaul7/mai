@@ -1,0 +1,7 @@
+,Discord,Telegram,Microsoft Teams,Whatsapp,Facebook Messenger,Signal,total_flows,recall,precision,weighted_precision,f1_score
+Discord,759,21,9,2,3,19,813,93.36,70.21,77.73,84.83
+Telegram,147,1398,16,14,0,40,1615,86.56,83.86,74.67,80.18
+Microsoft Teams,61,45,785,20,1,5,917,85.61,94.81,95.22,90.16
+Whatsapp,11,35,5,320,1,8,380,84.21,85.79,94.92,89.25
+Facebook Messenger,15,53,9,9,1523,7,1616,94.25,99.67,99.22,96.67
+Signal,88,115,4,8,0,1011,1226,82.46,92.75,91.26,86.64

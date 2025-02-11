@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai2/mlruns/817613632967417826/0f4f9b6d7b034ccbb63df5c89531868e/artifacts
+end_time: 1738721822469
+entry_point_name: ''
+experiment_id: '817613632967417826'
+lifecycle_stage: active
+run_id: 0f4f9b6d7b034ccbb63df5c89531868e
+run_name: cnn_l2_0.0001
+run_uuid: 0f4f9b6d7b034ccbb63df5c89531868e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738720963228
+status: 3
+tags: []
+user_id: mpaul

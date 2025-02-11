@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai2/mlruns/817613632967417826/b4031e5fd64240f2ab7d1afad38560bc/artifacts
+end_time: 1738770474815
+entry_point_name: ''
+experiment_id: '817613632967417826'
+lifecycle_stage: active
+run_id: b4031e5fd64240f2ab7d1afad38560bc
+run_name: mlp_v2_dropout_rate_0.1
+run_uuid: b4031e5fd64240f2ab7d1afad38560bc
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738770359446
+status: 3
+tags: []
+user_id: mpaul

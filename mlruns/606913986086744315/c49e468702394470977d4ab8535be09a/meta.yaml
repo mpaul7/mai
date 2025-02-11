@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/606913986086744315/c49e468702394470977d4ab8535be09a/artifacts
+end_time: 1738443516704
+entry_point_name: ''
+experiment_id: '606913986086744315'
+lifecycle_stage: active
+run_id: c49e468702394470977d4ab8535be09a
+run_name: dropout_rate_0.4
+run_uuid: c49e468702394470977d4ab8535be09a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738443405499
+status: 3
+tags: []
+user_id: mpaul

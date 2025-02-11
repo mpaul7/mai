@@ -1,0 +1,7 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/292861450852299972
+creation_time: 1738103090397
+experiment_id: '292861450852299972'
+last_update_time: 1738103410147
+lifecycle_stage: deleted
+name: cnn_5_learning_rate
+tags: {}

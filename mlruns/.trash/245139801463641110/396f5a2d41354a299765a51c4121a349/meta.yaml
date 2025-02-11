@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/245139801463641110/396f5a2d41354a299765a51c4121a349/artifacts
+deleted_time: 1737995670235
+end_time: 1737658824254
+entry_point_name: ''
+experiment_id: '245139801463641110'
+lifecycle_stage: deleted
+run_id: 396f5a2d41354a299765a51c4121a349
+run_name: adaptable-swan-941
+run_uuid: 396f5a2d41354a299765a51c4121a349
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737658806192
+status: 3
+tags: []
+user_id: mpaul

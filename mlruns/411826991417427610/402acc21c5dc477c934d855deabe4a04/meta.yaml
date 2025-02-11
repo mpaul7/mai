@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai2/mlruns/411826991417427610/402acc21c5dc477c934d855deabe4a04/artifacts
+end_time: 1739064639641
+entry_point_name: ''
+experiment_id: '411826991417427610'
+lifecycle_stage: active
+run_id: 402acc21c5dc477c934d855deabe4a04
+run_name: Solana_data_nfs_features_twc_label_mlp_v2_dropout_rate_0.1
+run_uuid: 402acc21c5dc477c934d855deabe4a04
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739064436550
+status: 3
+tags: []
+user_id: mpaul

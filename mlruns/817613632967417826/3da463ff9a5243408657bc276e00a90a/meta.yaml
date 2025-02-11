@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai2/mlruns/817613632967417826/3da463ff9a5243408657bc276e00a90a/artifacts
+end_time: 1738707957145
+entry_point_name: ''
+experiment_id: '817613632967417826'
+lifecycle_stage: active
+run_id: 3da463ff9a5243408657bc276e00a90a
+run_name: cnn_dropout_rate_0.3
+run_uuid: 3da463ff9a5243408657bc276e00a90a
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738707128814
+status: 3
+tags: []
+user_id: mpaul

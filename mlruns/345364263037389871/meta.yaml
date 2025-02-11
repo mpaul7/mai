@@ -1,0 +1,6 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/345364263037389871
+creation_time: 1738330590894
+experiment_id: '345364263037389871'
+last_update_time: 1738330590894
+lifecycle_stage: active
+name: cnn_120fixed_v1_non_augmented

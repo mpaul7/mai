@@ -1,0 +1,6 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai2/mlruns/193043517714810518
+creation_time: 1738632536352
+experiment_id: '193043517714810518'
+last_update_time: 1738632536352
+lifecycle_stage: active
+name: cnn_120_solana_mlp_v3

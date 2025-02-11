@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/545524264561218751/bc571aaa5d1042829714a806ec39ab72/artifacts
+deleted_time: 1737995673449
+end_time: 1737658617569
+entry_point_name: ''
+experiment_id: '545524264561218751'
+lifecycle_stage: deleted
+run_id: bc571aaa5d1042829714a806ec39ab72
+run_name: unruly-fish-650
+run_uuid: bc571aaa5d1042829714a806ec39ab72
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737658611422
+status: 3
+tags: []
+user_id: mpaul

@@ -126,7 +126,13 @@ def create_dl_model_cnn_v2(params):
 def create_dl_model_cnn(params):
 
     """Create input layers for packet sequence data """
-    inputs = {name: layers.Input(shape=(params['stat_length'],), dtype=tf.float32, name=name) for name in params['stat_packet_feature']}
+    # if params['cnn_feature_type'] == 'sequence':
+    #     inputs = {name: layers.Input(shape=(params['sequence_length'],), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
+    # elif params['cnn_feature_type'] == 'statistical':
+    #     inputs = {name: layers.Input(shape=(params['cnn_stat_feature_length'],), dtype=tf.float32, name=name) for name in params['cnn_stat_feature']}
+    # elif params['cnn_feature_type'] == 'packet_bytes':
+    #     inputs = {name: layers.Input(shape=(params['cnn_byte_feature_length'],), dtype=tf.float32, name=name) for name in params['cnn_byte_feature']}
+    inputs = {name: layers.Input(shape=(params['cnn_stat_feature_length'],), dtype=tf.float32, name=name) for name in params['cnn_stat_feature']}
     # inputs = {name: layers.Input(shape=(150,), dtype=tf.float32, name=name) for name in params['seq_packet_feature']}
     """Stack input layers"""
     pktseq_x = tf.stack(list(inputs.values()), axis=2)
@@ -182,14 +188,20 @@ def create_dl_model_lstm(params):
     # pktseq_x = layers.Concatenate(axis=-1)([pktseq_x1, pktseq_x2])
     
     """LSTM units layer"""
-    lstm = layers.LSTM(units=params['lstm_units'], 
-                    input_shape=(params['sequence_length'], 3), 
-                    recurrent_dropout=params['dropout_rate'],
-                    name='lstm'
-                    )(pktseq_x1)
-
+    if params['num_lstm'] == 1:
+        lstm = layers.LSTM(units=params['lstm_units'], 
+                        input_shape=(params['sequence_length'], 3), 
+                        recurrent_dropout=params['dropout_rate'],
+                        name=f'lstm'
+                        )(pktseq_x1)
+    if params['num_lstm'] == 2:
+                lstm = layers.LSTM(params['lstm_units'], input_shape=(params['sequence_length'], 3),
+                            return_sequences=True,
+                            recurrent_dropout=params['dropout_rate'])(pktseq_x1)
+                lstm = layers.LSTM(params['lstm_units'], input_shape=(params['sequence_length'], 3),
+                            go_backwards=True, recurrent_dropout=params['dropout_rate'])(lstm)
     """Create chain of Dense layers"""
-    for i in range(params['num_lstm_dense']):
+    for i in range(params['num_lstm_dense']): # 2
         lstm = layers.Dense(units=params['lstm_dense_units_list'][i], 
                             kernel_initializer=KERAS_INITIALIZER[params['initializer']],
                             name=f'lstm_dense_{i}'
@@ -213,11 +225,11 @@ def create_dl_model_mlp(params):
     x = layers.Concatenate(axis=-1)(list(inputs.values()))
     
     """Create chain of Dense layers"""
-    for i in range(params['num_dense']):
-        x = layers.Dense(units=params['units_list'][i], kernel_initializer=KERAS_INITIALIZER[params['initializer']], name=f'dense_{i}')(x)
+    for i in range(params['mlp']['num_dense']):
+        x = layers.Dense(units=params['mlp']['units_list'][i], kernel_initializer=KERAS_INITIALIZER[params['initializer']], name=f'dense_{i}')(x)
         x = layers.BatchNormalization(name=f'batch_norm_{i}')(x)
         x = layers.LeakyReLU(name=f'leaky_relu_{i}')(x)
-        x = layers.Dropout(params['dense_layer_dropout_rate'], name=f'dropout_{i}')(x)
+        x = layers.Dropout(params['mlp']['dense_layer_dropout_rate'], name=f'dropout_{i}')(x)
     
     """Output layer"""
     # outputs = layers.Dense(units=output_units, activation='softmax', name='softmax')(x)
@@ -236,8 +248,14 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
         # print("lstm")
         features.extend(params['seq_packet_feature'])
     if 'cnn' in model_type:
-        # print("cnn")
-        features.extend(params['stat_packet_feature'])
+        features.extend(params['cnn_stat_feature'])
+        # if params['cnn_feature_type'] == "sequence":
+        #     features.extend(params['seq_packet_feature'])
+        # elif params['cnn_feature_type'] == "statistical":
+        #     features.extend(params['cnn_stat_feature'])
+        # elif params['cnn_feature_type'] == "packet_bytes":
+        #     features.extend(params['cnn_byte_feature'])
+        
     features.extend([params['target_column']])
  
     X = df.loc[:, features]
@@ -258,8 +276,19 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
             feat_dict['pktseq_features'] = X_pktseq
 
         if 'cnn' in model_type:
-            X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['stat_packet_feature']].items()}
-            # print(X_pktseq, 3333)
+            # print("cnn")
+            # if params['cnn_feature_type'] == "sequence":
+            #     print("sequence")
+            #     X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['seq_packet_feature']].items()}
+            #     feat_dict['cnn_features'] = X_pktseq
+            # elif params['cnn_feature_type'] == "statistical":
+            #     X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['cnn_stat_feature']].items()}
+            #     feat_dict['cnn_features'] = X_pktseq
+            # elif params['cnn_feature_type'] == "packet_bytes":
+            #     X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['cnn_byte_feature']].items()}
+            #     feat_dict['cnn_features'] = X_pktseq
+                
+            X_pktseq = {name: np.stack(value) for name, value in X.loc[:, params['cnn_stat_feature']].items()}
             feat_dict['pktstat_features'] = X_pktseq
         
         # if 'cnn' in model_type:
@@ -269,12 +298,25 @@ def create_train_test_dataset_tf(data_file=None, params=None, train=None, evalua
         # else:
         #     ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
 
-    
-        ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
+        # if len(model_type) == 1 and model_type[0] == 'cnn':
+        #     print("1")
+        #     ds_X = tf.data.Dataset.from_tensor_slices(X_pktseq, name='X')
+        # elif len(model_type) == 1 and model_type[0] != 'cnn':
+        #     print("2")
+        #     ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
+        # elif len(model_type) > 1:
+        #     print("3")
+        #     ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
+        # else:
+        #     raise ValueError("Invalid model_type configuration.")
         # ds_X = tf.data.Dataset.from_tensor_slices(X_pktseq, name='X')
+        ds_X = tf.data.Dataset.from_tensor_slices(feat_dict, name='X')
         ds_y = tf.data.Dataset.from_tensor_slices(y)
         tf_dataset = tf.data.Dataset.zip((ds_X, ds_y))
         return tf_dataset
+        
+        # ds_X = tf.data.Dataset.from_tensor_slices(X_pktseq, name='X')
+        
     
     def create_dataset_original(X, y, features):
 

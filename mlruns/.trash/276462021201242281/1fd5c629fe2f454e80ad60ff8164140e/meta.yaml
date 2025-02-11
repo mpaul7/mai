@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/276462021201242281/1fd5c629fe2f454e80ad60ff8164140e/artifacts
+deleted_time: 1737995664237
+end_time: 1737660574745
+entry_point_name: ''
+experiment_id: '276462021201242281'
+lifecycle_stage: deleted
+run_id: 1fd5c629fe2f454e80ad60ff8164140e
+run_name: suave-trout-665
+run_uuid: 1fd5c629fe2f454e80ad60ff8164140e
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737660562907
+status: 3
+tags: []
+user_id: mpaul

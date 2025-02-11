@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/0/25a01f1630ac4965b105058c8a4c4e1d/artifacts
+end_time: 1738094663720
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: 25a01f1630ac4965b105058c8a4c4e1d
+run_name: dashing-bird-69
+run_uuid: 25a01f1630ac4965b105058c8a4c4e1d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1738094663012
+status: 3
+tags: []
+user_id: mpaul

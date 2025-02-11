@@ -1,0 +1,13 @@
+1. Summarize on impact of (dr, lr, l1, l2) 
+2. Solana TWc -(16)MLP VS CNN
+3a. Solana - NFstream, Model [MLP, CNN}
+3b. Solana -> TWC (24 or 26) [MLP, CNN]
+
+
+Trained model - 40 apps 
+
+Test - Solana 40 app + Isolation Forest - Binary clf. (1 -> 40 apps, 0-> else)
+Test Filter data = 1, split (
+
+Data aug, 
+/home/mpaul/projects/mpaul/parsing/packet-parsing/data/openvpn_gitClone_vpnEstablished_29-11-2024.pcap

@@ -1,0 +1,6 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/527876312283811882
+creation_time: 1738125855907
+experiment_id: '527876312283811882'
+last_update_time: 1738125855907
+lifecycle_stage: active
+name: cnn_120_regularizer_value_v2

@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/545524264561218751/560c37ee8973461fbc5fda0316191c05/artifacts
+deleted_time: 1737995673449
+end_time: 1737658295969
+entry_point_name: ''
+experiment_id: '545524264561218751'
+lifecycle_stage: deleted
+run_id: 560c37ee8973461fbc5fda0316191c05
+run_name: melodic-dolphin-408
+run_uuid: 560c37ee8973461fbc5fda0316191c05
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737658289520
+status: 3
+tags: []
+user_id: mpaul

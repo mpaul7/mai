@@ -1,0 +1,6 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/684975282790299112
+creation_time: 1738035306270
+experiment_id: '684975282790299112'
+last_update_time: 1738035306270
+lifecycle_stage: active
+name: lstm_120_0.0007_dropout_rate

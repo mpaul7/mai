@@ -1,0 +1,7 @@
+artifact_location: file:///home/mpaul/projects/mpaul/mai/mlruns/499513919649193391
+creation_time: 1738084548107
+experiment_id: '499513919649193391'
+last_update_time: 1738084990695
+lifecycle_stage: deleted
+name: lstm_120_0.001_learning_rate
+tags: {}

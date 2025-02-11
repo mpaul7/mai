@@ -1,0 +1,8 @@
+,discord,others,telegram,microsoft_teams,whatsapp,facebook_messenger,signal,total_flows,recall,precision,weighted_precision,f1_score
+discord,228,20,4,14,6,1,5,278,82.01,68.88,81.2,81.6
+others,20,441,13,25,10,13,67,589,74.87,80.18,74.35,74.61
+telegram,3,11,486,5,6,3,0,514,94.55,91.7,92.21,93.37
+microsoft_teams,48,34,16,1436,14,14,14,1576,91.12,93.86,78.83,84.53
+whatsapp,17,15,4,15,119,5,10,185,64.32,75.8,91.15,75.42
+facebook_messenger,14,24,7,34,2,347,172,600,57.83,87.19,81.15,67.53
+signal,1,5,0,1,0,15,202,224,90.18,42.98,65.2,75.68

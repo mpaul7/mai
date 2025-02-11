@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# 
+# sleep 18000
 # train_file="/home/mpaul/projects/mpaul/mai/data/train_cryptocurrncy_70files_2.parquet"
 # test_file="/home/mpaul/projects/mpaul/mai/data/test_cryptocurrncy_70files_2.parquet"
 
@@ -16,39 +17,47 @@
 # train_file="/home/mpaul/projects/mpaul/mai/data/train_dalhousie_nims_7app_nfs_stat_features_v2_normalized.parquet"
 # test_file="/home/mpaul/projects/mpaul/mai/data/test_dalhousie_nims_7app_nfs_v2_normalized.parquet"
 
-train_file="/home/mpaul/projects/mpaul/mai/data/standard_scaler/final_train_test/train_dalhousie_nims_7app_nfs_normalized.parquet"
-# test_file="/home/mpaul/projects/mpaul/mai/data/standard_scaler/final_train_test/test_dalhousie_nims_7app_nfs_normalized.parquet"
-# test_file="/home/mpaul/projects/mpaul/mai/data/standard_scaler/final_train_test/test_solana_7app_nfs_normalized.parquet"
-test_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/solana_2023c_7apps_nfs_extraxted_enta_task_normalized.parquet"
-# test_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/solana_2023c_7apps_nfs_extraxted_enta_task_non_normalized.parquet"
+# Original non-normalized files, contains stat features
+train_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/train_dalhousie_nims_7app_nfs_normalized.parquet"
+# test_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/solana_2023c_7apps_norm_v5.parquet"
 
-# =============== DL Models ===================== 
+# train_file="/home/mpaul/projects/mpaul/mai/data/standard_scaler/final_train_test/train_dalhousie_nims_7app_nfs_normalized.parquet"
+# train_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/train_dalhousie_nims_7app_nfs_normalized_augmented_20per.parquet"
+# train_file='/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/train_dalhousie_nims_7app_nfs_normalized_augmented_20x2per.parquet'
+# train_file='/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/train_dalhousie_nims_7app_nfs_normalized_augmented_20x4per.parquet'
+test_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/solana_2023c_7apps_norm_v6_80per.parquet"
+
 clf_type='dl'
 
 
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/1_mlp_120_20250106215848.h5'
-test_model='/home/mpaul/projects/mpaul/mai/models_jan06/2_lstm_120_20250106223118.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/3_cnn_60_20250106230825.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/4_cnn_120_20250107115237.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/5_mlp_lstm_120_20250107111953.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/6_mlp_cnn_seq_120_20250107065342.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/7_lstm_cnn_sta_60_20250107133200.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/8_mlp_lstm_60_20250107183834.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/9_mlp_cnn_seq_30_20250107182413.h5'
-# test_model='/home/mpaul/projects/mpaul/mai/models_jan06/10_lstm_cnn_sta_60_20250107144323.h5'
-# dl_config_file="configs/${clf_type}/${model}_dalhousie_nims_config_v2.json"
-dl_config_file="/home/mpaul/projects/mpaul/mai/configs/dl/dl_models.json"
-output_file="/home/mpaul/projects/mpaul/mai/results/mlp_lstm_cnn_20241203190916_test_results.csv"
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/808894472966913361/cb3e9aee6fd24d4e83704919f15e7972/artifacts/lstm_100_0.0007_20250127161138.h5"
 
-# python3 src_3/cli.py ${clf_type} train ${train_file} ${dl_config_file}
-python3 /home/mpaul/projects/mpaul/mai/src_3/cli.py ${clf_type} test ${test_model} ${dl_config_file} ${test_file}
+#l1_0.0001
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/942854525086969943/bef8aa1426224cebbc0906cfb4d4343c/artifacts/cnn_120_0.001_20250130201225.h5"
 
-# =============== ML Models ====================
-# clf_type='ml'
-# bucket_size=30
-# model="isolatiopn_forest"
-# config="isolationForest_dns"
-# ml_config_file="configs/${clf_type}/${config}.json"
-# trainded_model_name="${config}_${bucket_size}s"
-# python3 src/cli.py ${clf_type} train ${train_file} ${ml_config_file} ${trainded_model_name}
-# python3 src/cli.py ${clf_type} test ${trainded_model_name} ${test_file} ${ml_config_file}
+#l2_0.0001
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/942854525086969943/2a3a484b425945ac8fd456c169334098/artifacts/cnn_120_0.001_20250131011502.h5"
+
+#lr_0.001
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/482621291805992568/4341cadebe9b4ee7a3c5ebb23cb5ed60/artifacts/cnn_120_0.001_20250130155125.h5"
+
+#lr_0.01
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/482621291805992568/795c2c393880417384c7743898c547ef/artifacts/cnn_120_0.001_20250130155125.h5"
+
+#dr_0.1
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/570699845286275433/5d7688dbc3cf412f9de9b24ff4cb016f/artifacts/cnn_120_0.001_20250130114049.h5"
+
+#dr_0.2
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/570699845286275433/faa6938b3a4e41659473c3880cb6deda/artifacts/cnn_120_0.001_20250130114049.h5"
+
+#dr_0.3
+# test_model="/home/mpaul/projects/mpaul/mai/mlruns/570699845286275433/8d7c07a8abd64eb58242944825f1a1c9/artifacts/cnn_120_0.001_20250130114049.h5"
+
+# fixed 
+ test_model='/home/mpaul/projects/mpaul/mai/mlruns/345364263037389871/ad5a97cbc89d49ee804fa77fdda36dc9/artifacts/cnn_120_0.001_20250131083629.h5'
+
+dl_config_file="/home/mpaul/projects/mpaul/mai/configs/dl/dl_models_y2.json"
+output_file="/home/mpaul/projects/mpaul/mai/results/results_jan28/learning_rate/mlp_lstm_cnn_20241203190916_test_results.csv"
+
+# python3 src_5_overfitting_exp/cli.py ${clf_type} train ${train_file} ${dl_config_file}
+python3 src_5_overfitting_exp/cli.py ${clf_type} test ${test_model} ${dl_config_file} ${test_file} 

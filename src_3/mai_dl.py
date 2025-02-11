@@ -32,8 +32,13 @@ def mai_ml_train(train_data_file, config_file):
             
     current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
     model_name = "_".join(model_type for model_type in params['model_types'])
-    params['model_plot'] = f"{params['project_home']}/models_jan06/{model_name}_{current_datetime}.png"
-    MODEL_H5 = f"{model_name}_{params['epochs']}_{current_datetime}.h5"    
+    params['model_name'] = model_name
+    params['experiment_name'] = f"{model_name}_{current_datetime}"
+    params['model_plot'] = f"{params['project']['project_home']}/models/models_jan13/{model_name}_{current_datetime}.png"
+    MODEL_H5 = f"{model_name}_{params['epochs']}_{params['learning_rate']}_{current_datetime}.h5"    
+    MODEL_H5_PATH = f"{params['project']['project_home']}/models/models_jan21/{MODEL_H5}"
+    params['model_h5_path'] = MODEL_H5_PATH
+    MODEL_JSON = f"{model_name}_{params['epochs']}_{params['learning_rate']}_{current_datetime}.json"
     params['output_units'] = len(params['labels'])
 
     """ Build model using ModelBuilder 
@@ -60,12 +65,13 @@ def mai_ml_train(train_data_file, config_file):
     )
     
     model = _model.train_model()
-    model.save(f"{params['project_home']}/models_jan06/{MODEL_H5}", save_format='h5')
+    model.save(params['model_h5_path'], save_format='h5')
 
 @mai_dl.command("test")
 @click.argument('trained_model_file', type=click.Path(exists=True, dir_okay=False))
 @click.argument('config_file', type=click.Path(exists=True, dir_okay=False))
 @click.argument('test_data_file', type=click.Path(exists=True, dir_okay=False))
+@click.argument('output', type=click.Path(exists=True, dir_okay=True))
 def test_model_cmd(trained_model_file, config_file, test_data_file):
     
     with open(config_file) as f:
@@ -75,7 +81,7 @@ def test_model_cmd(trained_model_file, config_file, test_data_file):
     
     if trained_model_file is not None:
         head, tail = os.path.split(trained_model_file)
-        output_file = os.path.join( f'{params["project_home"]}/results_jan06/cross_dataset_v2', tail.replace('.h5', '.csv'))
+        output_file = os.path.join( f'{params["project_home"]}/results/results_jan22/', tail.replace('.h5', '.csv'))
     
     """Evaluate DL model"""
     model = DLModels(

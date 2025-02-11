@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/386301579650153543/f34c79dd1a164f3180cabc900dd19883/artifacts
+deleted_time: 1737995667351
+end_time: 1737659889846
+entry_point_name: ''
+experiment_id: '386301579650153543'
+lifecycle_stage: deleted
+run_id: f34c79dd1a164f3180cabc900dd19883
+run_name: monumental-smelt-114
+run_uuid: f34c79dd1a164f3180cabc900dd19883
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737659873091
+status: 3
+tags: []
+user_id: mpaul

@@ -36,7 +36,10 @@ from tensorflow.keras.layers import LSTM, Dense, Embedding
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.losses import CategoricalCrossentropy
 
+import mlflow
+# from mlflow.keras import MLflowCallback
 import utils_dl
+import platform
 
 class ModelBuilder:
     def __init__(self, params: dict):
@@ -99,13 +102,13 @@ class ModelBuilder:
             x = input_branches['layer'][0]
         
         # Add encoder dense layers
-        for i in range(self.params["num_encoder_dense"]):
+        for i in range(self.params["num_encoder_dense"]): # 2
             x = layers.Dense(units=self.params["encoder_dense_units_list"][i], 
                             kernel_initializer=utils_dl.KERAS_INITIALIZER[self.params["initializer"]],
-                            name=f'encoder_dense_{i}'
+                            name=f'final_dense_{i}'
                             )(x)
-            x = layers.LeakyReLU(name=f'encoder_leaky_relu_{i}')(x)
-            x = layers.Dropout(self.params["encoder_dense_dropout_rate"], name=f'encoder_dropout_{i}')(x)
+            x = layers.LeakyReLU(name=f'final_dense_leaky_relu_{i}')(x)
+            x = layers.Dropout(self.params["encoder_dense_dropout_rate"], name=f'final_dense_dropout_{i}')(x)
         
         # Add final dense layers
         for i in range(self.params["num_final_dense"]):
@@ -203,13 +206,17 @@ class ModelBuilderTransferLearning:
         # Load the pre-trained model
         # base_model = load_model('/home/mpaul/projects/mpaul/mai/models/mlp_lstm_cnn_20241203190916.h5')
         
-        # model # 10
-        # base_a = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/2_lstm_120_20250106223118.h5')
-        # base_b = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/4_cnn_120_20250107115237.h5')
+        # model # 8
+        # base_a = load_model('/home/mpaul/projects/mpaul/mai/models/models_jan13/1_mlp_120_0.0001_20250113155400.h5')
+        # base_b = load_model('/home/mpaul/projects/mpaul/mai/models/models_jan13/2_lstm_120_0.0001_20250113155937.h5')
 
         # model # 9
-        base_a = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/1_mlp_120_20250106215848.h5')
-        base_b = load_model('/home/mpaul/projects/mpaul/mai/models_jan06/2_lstm_120_20250106223118.h5')
+        # base_a = load_model('/home/mpaul/projects/mpaul/mai/models/models_jan13/1_mlp_120_0.0001_20250113155400.h5')
+        # base_b = load_model('/home/mpaul/projects/mpaul/mai/models/models_jan10/3_cnn_100_seq_7e-05_20250112220441.h5')
+        
+        # model # 10
+        base_a = load_model('/home/mpaul/projects/mpaul/mai/models/models_jan13/2c_lstm_300_0.001_20250114202244.h5')
+        base_b = load_model('/home/mpaul/projects/mpaul/mai/models/models_jan13/4_cnn_120_0.0001_20250113204311.h5')
         
         print("Model A Layers:")
         for i, layer in enumerate(base_a.layers):
@@ -226,12 +233,12 @@ class ModelBuilderTransferLearning:
         # print(base_mlp.layers[64].output)   
         
         # model 8 - mlp - 65 , lstm - 13
-        # model 9 - mlp - 65, cnn 22
+        # model 9 - mlp - 65, cnn 26
         # model 10 - lstm - 13, cnn - 19
         
 
-        partial_model_a = Model(inputs=base_a.input, outputs=base_a.layers[65].output)  
-        partial_model_b = Model(inputs=base_b.input, outputs=base_b.layers[13].output) 
+        partial_model_a = Model(inputs=base_a.input, outputs=base_a.layers[11].output)  
+        partial_model_b = Model(inputs=base_b.input, outputs=base_b.layers[24].output) 
         # base_model.trainable = False  # Freeze the base model layers
         for layer in partial_model_a.layers:
             if not isinstance(layer, layers.InputLayer):
@@ -300,33 +307,18 @@ class DLModels:
         """
         # self.model_type = model_type
         self.train_file = train_file
-        self.model = model_arch
+        self.model = model_arch #model_arch
         self.params = params
         self.test_file = test_file
         self.trained_model_file = trained_model_file
 
-        # Setup output file
-        # if self.trained_model_file is not None:
-        #     head, tail = os.path.split(self.trained_model_file)
-        #     self.output_file = os.path.join( f'{self.params["project_home"]}/results_dec30/', tail.replace('.h5', '.csv'))
-
     def train_model(self) -> Model:
-        
-        """Trains a deep learning model.
+        """ Trains a deep learning model.
             Return: trained model
         """
-        # """ Build model using ModelBuilder """
-        # if self.params.get("use_transfer_learning", False):
-        #     model_builder = ModelBuilderTransferLearning(self.params, self.output_units)
-        # else:
-        #     model_builder = ModelBuilder(self.params)
-        # model = model_builder.build_model()
         
         """ Visualize model """
         tf.keras.utils.plot_model(self.model, self.params['model_plot'], show_shapes=True)
-        
-        # """ Model Summary """
-        # model.summary()
         
         """ Compile model """
         self.model.compile(
@@ -350,13 +342,72 @@ class DLModels:
         """ Setup callbacks """
         callbacks = self._setup_callbacks()
         
-        """ Train model """
-        self.model.fit(
-            train_dataset,
-            epochs=self.params['epochs'],
-            steps_per_epoch=self.params['steps_per_epoch'],
-            callbacks=callbacks
-        )
+        """ Set up MLflow tracking """
+   
+        # mlflow.set_experiment(self.params['experiment_name'])
+        # mlflow.set_experiment(f"{self.params['model_name']}_{self.params['epochs']}_{self.params['learning_rate']}")
+        
+        
+        options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3,
+                                                        python_tracer_level = 1,
+                                                        device_tracer_level = 1)
+        tf.profiler.experimental.start(logdir=self.params['log_dir'], options=options)
+        
+        
+        with mlflow.start_run(run_name='run1'):
+            # Log model parameters
+            mlflow.log_params({
+                'learning_rate': self.params['learning_rate'],
+                'batch_size': self.params['train_batch_size'],
+                'epochs': self.params['epochs'],
+                'steps_per_epoch': self.params['steps_per_epoch']
+            })
+            
+            # Log system metrics
+            mlflow.log_param("system_info", {
+                "python_version": platform.python_version(),
+                "platform": platform.platform(),
+                "cpu_count": os.cpu_count(),
+                # Remove memory info or use psutil if needed
+            })
+            
+            # Train model and get history
+            history = self.model.fit(
+                train_dataset,
+                epochs=self.params['epochs'], 
+                steps_per_epoch=self.params['steps_per_epoch'],
+                validation_data=val_dataset,
+                callbacks=callbacks
+            )
+            
+            # Log training metrics
+            for epoch in range(len(history.history['accuracy'])):
+                mlflow.log_metrics({
+                    'training_accuracy': history.history['accuracy'][epoch],
+                    'training_loss': history.history['loss'][epoch],
+                    'validation_accuracy': history.history['val_accuracy'][epoch], 
+                    'validation_loss': history.history['val_loss'][epoch]
+                }, step=epoch)
+            
+            
+            
+            # Save H5 file
+            self.model.save(self.params['model_h5_path'], save_format='h5')
+            
+            # Log H5 file to MLflow
+            mlflow.log_artifact(self.params['model_h5_path'])
+            # Log model architecture plot
+            if self.params.get('model_plot'):
+                mlflow.log_artifact(self.params['model_plot'])
+
+        # """ Train model """
+        # self.model.fit(
+        #     train_dataset,
+        #     epochs=self.params['epochs'],
+        #     steps_per_epoch=self.params['steps_per_epoch'],
+        #     validation_data=val_dataset,
+        #     callbacks=callbacks
+        # )
         
         return self.model
     
@@ -379,10 +430,7 @@ class DLModels:
         
         # Add early stopping if enabled
         if self.params['early_stopping']:
-            callbacks.append(tf.keras.callbacks.EarlyStopping(
-                monitor='val_loss',
-                patience=7
-            ))
+            callbacks.append(tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=7))
         
         return callbacks
 

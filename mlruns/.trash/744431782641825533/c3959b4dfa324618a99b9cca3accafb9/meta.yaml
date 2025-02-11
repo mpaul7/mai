@@ -1,0 +1,16 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai/mlruns/744431782641825533/c3959b4dfa324618a99b9cca3accafb9/artifacts
+deleted_time: 1737995646407
+end_time: null
+entry_point_name: ''
+experiment_id: '744431782641825533'
+lifecycle_stage: deleted
+run_id: c3959b4dfa324618a99b9cca3accafb9
+run_name: victorious-wren-769
+run_uuid: c3959b4dfa324618a99b9cca3accafb9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1737994958547
+status: 1
+tags: []
+user_id: mpaul
