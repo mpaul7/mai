@@ -41,7 +41,7 @@ class ModelBuilder:
         input_branches = self._build_model_branches()
         model_arch = self._create_final_model(input_branches)
         """ Visualize model """
-        tf.keras.utils.plot_model(model_arch, self.params['model_plot'], show_shapes=True)
+        # tf.keras.utils.plot_model(model_arch, self.params['model_plot'], show_shapes=True)
         return model_arch   
 
     def _build_model_branches(self) -> dict:
@@ -310,7 +310,7 @@ class DLModels:
         """
         
         """ Visualize model """
-        tf.keras.utils.plot_model(self.model, self.params['model_plot'], show_shapes=True)
+        # tf.keras.utils.plot_model(self.model, self.params['model_plot'], show_shapes=True)
         
         """ Compile model """
         self.model.compile(
@@ -396,12 +396,13 @@ class DLModels:
         #     # Log model architecture plot
         #     # if self.params.get('model_plot'):
         #     #     mlflow.log_artifact(self.params['model_plot'])
-        import datetime
+        from datetime import datetime
         # logs = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+        log_dir = f"{self.params['project']['project_home']}/{self.params['log_dir']}"
         options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3,
                                                    python_tracer_level = 1,
                                                    device_tracer_level = 1)
-        tf.profiler.experimental.start(self.params['log_dir'], options = options)
+        tf.profiler.experimental.start(log_dir, options = options)
         # Training code here
         
 

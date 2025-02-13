@@ -1,0 +1,7 @@
+click
+numpy
+scikit-learn
+tensorflow
+mlflow
+pydot
+tqdm
