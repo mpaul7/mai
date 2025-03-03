@@ -51,7 +51,7 @@ def mai_ml_train(train_data_file, config_file):
     # learning_rate_list  = [0.0001, 0.001, 0.01, 0.1]
     # regularization_value_list = [0.0001, 0.001, 0.01, 0.1]
     
-    params['experiment_name'] = f"cnn_mlp_stat_solana_data_nfs_ext_2024-02-08_v1"
+    params['experiment_name'] = f"cnn_stat_solana_data_tr_ext_2024-03-02_v1"
     
     for k, v in hyper_params.items():
         for hyper_param in v:
@@ -72,6 +72,9 @@ def mai_ml_train(train_data_file, config_file):
             else:
                 model_builder = ModelBuilder(params)
             model_arch  = model_builder.build_model()
+            model_json = model_arch.to_json()
+            with open(f"/home/mpaul/projects/mpaul/mai2/models/models_feb02/{MODEL_JSON}", "w") as json_file:
+                json.dump(model_json, json_file)
             
             """ Model Summary """
             model_arch.summary()

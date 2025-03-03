@@ -1,0 +1,15 @@
+artifact_uri: file:///home/mpaul/projects/mpaul/mai2/mlruns/725300526630306568/43305ad813204d3483556c2521ebd6bb/artifacts
+end_time: 1740972671174
+entry_point_name: ''
+experiment_id: '725300526630306568'
+lifecycle_stage: active
+run_id: 43305ad813204d3483556c2521ebd6bb
+run_name: Solana_data_twc_features_24_cnn_v2_dropout_rate_0.1
+run_uuid: 43305ad813204d3483556c2521ebd6bb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1740972516004
+status: 3
+tags: []
+user_id: mpaul

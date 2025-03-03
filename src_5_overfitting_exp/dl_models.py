@@ -336,84 +336,86 @@ class DLModels:
         
         """ Set up MLflow tracking """
    
-        # # mlflow.set_experiment(self.params['experiment_name'])
-        # # mlflow.set_experiment(f"{self.params['model_name']}_{self.params['epochs']}_solana_mlp_cnn_stat_v1")
         # mlflow.set_experiment(self.params['experiment_name'])
+        # mlflow.set_experiment(f"{self.params['model_name']}_{self.params['epochs']}_solana_mlp_cnn_stat_v1")
+        mlflow.set_experiment(self.params['experiment_name'])
         
-        # with mlflow.start_run(run_name=self.params["run_name"]):
-        #     # Log model parameters
-        #     mlflow.log_params({
-        #         'learning_rate': self.params['learning_rate'],
-        #         'batch_size': self.params['train_batch_size'],
-        #         'epochs': self.params['epochs'],
-        #         'steps_per_epoch': self.params['steps_per_epoch'],
-        #         'dropout_rate': self.params['dropout_rate'],
-        #         'regularizer': self.params['regularizer'],
-        #         'regularizer_value': self.params['regularizer_value']
-        #     })
+        with mlflow.start_run(run_name=self.params["run_name"]):
+            # Log model parameters
+            mlflow.log_params({
+                'learning_rate': self.params['learning_rate'],
+                'batch_size': self.params['train_batch_size'],
+                'epochs': self.params['epochs'],
+                'steps_per_epoch': self.params['steps_per_epoch'],
+                'dropout_rate': self.params['dropout_rate'],
+                'regularizer': self.params['regularizer'],
+                'regularizer_value': self.params['regularizer_value']
+            })
             
-        #     # Log system metrics
-        #     mlflow.log_param("system_info", {
-        #         "python_version": platform.python_version(),
-        #         "platform": platform.platform(),
-        #         "cpu_count": os.cpu_count(),
-        #         # Remove memory info or use psutil if needed
-        #     })
+            # Log system metrics
+            mlflow.log_param("system_info", {
+                "python_version": platform.python_version(),
+                "platform": platform.platform(),
+                "cpu_count": os.cpu_count(),
+                # Remove memory info or use psutil if needed
+            })
             
-        #     # onplateau  = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, min_lr=1e-6)
-        #     # lr_recorder = LearningRateRecorder()
-        #     # callbacks.append(onplateau          )
-        #     # callbacks.append(lr_recorder)
-        #     # Train model and get history
-        #     history = self.model.fit(
-        #         train_dataset,
-        #         epochs=self.params['epochs'], 
-        #         steps_per_epoch=self.params['steps_per_epoch'],
-        #         validation_data=val_dataset,
-        #         callbacks=callbacks
-        #     )
+            # onplateau  = ReduceLROnPlateau(monitor='val_loss', factor=0.1, patience=10, min_lr=1e-6)
+            # lr_recorder = LearningRateRecorder()
+            # callbacks.append(onplateau          )
+            # callbacks.append(lr_recorder)
+            # Train model and get history
+            history = self.model.fit(
+                train_dataset,
+                epochs=self.params['epochs'], 
+                steps_per_epoch=self.params['steps_per_epoch'],
+                validation_data=val_dataset,
+                callbacks=callbacks
+            )
             
-        #     # Log learning rate
-        #     # mlflow.log_metrics({'learning_rate': lr_recorder.lrate_list})       
-            
-            
-        #     # Log training metrics
-        #     for epoch in range(len(history.history['accuracy'])):
-        #         mlflow.log_metrics({
-        #             'training_accuracy': history.history['accuracy'][epoch],
-        #             'training_loss': history.history['loss'][epoch],
-        #             'validation_accuracy': history.history['val_accuracy'][epoch], 
-        #             'validation_loss': history.history['val_loss'][epoch]
-        #         }, step=epoch)
+            # Log learning rate
+            # mlflow.log_metrics({'learning_rate': lr_recorder.lrate_list})       
             
             
+            # Log training metrics
+            for epoch in range(len(history.history['accuracy'])):
+                mlflow.log_metrics({
+                    'training_accuracy': history.history['accuracy'][epoch],
+                    'training_loss': history.history['loss'][epoch],
+                    'validation_accuracy': history.history['val_accuracy'][epoch], 
+                    'validation_loss': history.history['val_loss'][epoch]
+                }, step=epoch)
             
-        #     # Save H5 file
-        #     self.model.save(self.params['model_h5_path'], save_format='h5')
             
-        #     # Log H5 file to MLflow
-        #     mlflow.log_artifact(self.params['model_h5_path'])
-        #     # Log model architecture plot
-        #     # if self.params.get('model_plot'):
-        #     #     mlflow.log_artifact(self.params['model_plot'])
-        import datetime
+            
+            # Save H5 file
+            self.model.save(self.params['model_h5_path'], save_format='h5')
+            
+            # Log H5 file to MLflow
+            mlflow.log_artifact(self.params['model_h5_path'])
+            # Log model architecture plot
+            # if self.params.get('model_plot'):
+            #     mlflow.log_artifact(self.params['model_plot'])
+        # import datetime
         # logs = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
-        options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3,
-                                                   python_tracer_level = 1,
-                                                   device_tracer_level = 1)
-        tf.profiler.experimental.start(self.params['log_dir'], options = options)
+        # options = tf.profiler.experimental.ProfilerOptions(host_tracer_level = 3,
+        #                                            python_tracer_level = 1,
+        #                                            device_tracer_level = 1)
+        
+        # log_dir = f"{self.params['project']['project_home']}/{self.params['log_dir']}"
+        # tf.profiler.experimental.start(log_dir)
         # Training code here
         
 
-        """ Train model """
-        self.model.fit(
-            train_dataset,
-            epochs=self.params['epochs'],
-            steps_per_epoch=self.params['steps_per_epoch'],
-            validation_data=val_dataset,
-            callbacks=callbacks
-        )
-        tf.profiler.experimental.stop()
+        # """ Train model """
+        # self.model.fit(
+        #     train_dataset,
+        #     epochs=self.params['epochs'],
+        #     steps_per_epoch=self.params['steps_per_epoch'],
+        #     validation_data=val_dataset,
+        #     # callbacks=callbacks
+        # )
+        # tf.profiler.experimental.stop()
         
         return self.model
     

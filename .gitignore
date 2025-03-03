@@ -36,4 +36,7 @@ ENV/
 *.swo
 
 # data files
-/data/
+/data/*
+/data_source/*
+/artifacts/*
+/results/*

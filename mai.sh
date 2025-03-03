@@ -18,7 +18,12 @@
 # test_file="/home/mpaul/projects/mpaul/mai/data/test_dalhousie_nims_7app_nfs_v2_normalized.parquet"
 
 # Original non-normalized files, contains stat features
-train_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/train_dalhousie_nims_7app_nfs_normalized.parquet"
+# train_file="/home/mpaul/projects/mpaul/mai2/data/solana_2023c_data_nfs_extract/final_dataset/train_dalhousie_nims_7app_nfs_normalized.parquet"
+# train_file='/home/mpaul/projects/mpaul/mai/end-to-end-dl-pipeline/artifacts/data_mar03/data_split/data_sources_solana_train.parquet'
+# train_file='/home/mpaul/projects/mpaul/mai/end-to-end-dl-pipeline/data_source/train_tr_ext_Solana_alldata_mapped_100per.parquet'
+train_file='/home/mpaul/projects/mpaul/mai/end-to-end-dl-pipeline/artifacts/data_mar02/data_split/data_sources_solana_train.parquet'
+# train_file='/home/mpaul/projects/mpaul/mai/end-to-end-dl-pipeline/data_source/train_tr_ext_Solana_alldata_mapped_100per_34feat.parquet'
+# train_file="/home/mpaul/projects/mpaul/mai/end-to-end-dl-pipeline/artifacts/data_mar02/data_split/data_sources_solana_train.parquet"
 # test_file="/home/mpaul/projects/mpaul/mai/data/solana_2023c_data_nfs_extract/final_dataset/solana_2023c_7apps_norm_v5.parquet"
 
 # train_file="/home/mpaul/projects/mpaul/mai/data/standard_scaler/final_train_test/train_dalhousie_nims_7app_nfs_normalized.parquet"
@@ -56,8 +61,8 @@ clf_type='dl'
 # fixed 
  test_model='/home/mpaul/projects/mpaul/mai/mlruns/345364263037389871/ad5a97cbc89d49ee804fa77fdda36dc9/artifacts/cnn_120_0.001_20250131083629.h5'
 
-dl_config_file="/home/mpaul/projects/mpaul/mai/configs/dl/dl_models_y2.json"
+dl_config_file="/home/mpaul/projects/mpaul/mai2/configs/dl/dl_models_y2.json"
 output_file="/home/mpaul/projects/mpaul/mai/results/results_jan28/learning_rate/mlp_lstm_cnn_20241203190916_test_results.csv"
 
-# python3 src_5_overfitting_exp/cli.py ${clf_type} train ${train_file} ${dl_config_file}
-python3 src_5_overfitting_exp/cli.py ${clf_type} test ${test_model} ${dl_config_file} ${test_file} 
+python3 src_5_overfitting_exp/cli.py ${clf_type} train ${train_file} ${dl_config_file}
+# python3 src_5_overfitting_exp/cli.py ${clf_type} test ${test_model} ${dl_config_file} ${test_file} 
